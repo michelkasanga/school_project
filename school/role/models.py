@@ -6,7 +6,6 @@ class Role(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        db_table = 'roles'
         verbose_name = 'role'
         verbose_name_plural = 'roles'
         ordering = ['name']  

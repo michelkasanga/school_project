@@ -3,8 +3,11 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import models
+from options.models import Options
+from section.models import Section
 from classes.models import Classes
 from django.utils import timezone  
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Students(models.Model):
@@ -12,9 +15,17 @@ class Students(models.Model):
     surname = models.CharField(max_length=60, null = False, blank=False)
     first_name = models.CharField(max_length=60, null = False, blank=False)
     matricule = models.CharField(max_length=100, unique=True, blank=True)
-    classe = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True)
+    classe = models.ForeignKey(Classes, on_delete=models.SET_NULL , null=True, )
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null = True)
+    option = models.ForeignKey(Options, on_delete=models.SET_NULL, null=True)
     date_birthday = models.DateField(null=True, blank=True)
     place_birthday = models.CharField(max_length=60, null= True, blank= True)
+    address =  models.CharField(max_length=255, null= True, blank= True)
+    father_name =  models.CharField(max_length=150, null= True, blank= True)
+    mother_name =  models.CharField(max_length=150, null= True, blank= True)
+    garduan =  models.CharField(max_length=150, null= True, blank= True)
+    contact_garduan = PhoneNumberField(region="CD", unique=True)
+    address_garduan = models.CharField(max_length=255, null= True, blank= True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

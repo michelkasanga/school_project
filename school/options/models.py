@@ -6,7 +6,6 @@ class Options(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        db_table = 'options'
         verbose_name = 'Option'
         verbose_name_plural = 'Options'
         ordering = ['name']  

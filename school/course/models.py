@@ -8,7 +8,6 @@ class Course(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        db_table = 'cours'
         verbose_name = 'cours'
         verbose_name_plural = 'cours'
         ordering = ['name']

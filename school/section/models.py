@@ -6,7 +6,6 @@ class Section(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        db_table = 'sections'
         verbose_name = 'section'
         verbose_name_plural = 'sections'
         ordering = ['name']  
