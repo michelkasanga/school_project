@@ -3,11 +3,11 @@ from section.models import Section
 
 class Course(models.Model):
     name = models.CharField(max_length= 255, null=False, blank=False)
-    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
+        db_table='course'
         verbose_name = 'cours'
         verbose_name_plural = 'cours'
         ordering = ['name']

@@ -24,7 +24,7 @@ class Students(models.Model):
     father_name =  models.CharField(max_length=150, null= True, blank= True)
     mother_name =  models.CharField(max_length=150, null= True, blank= True)
     garduan =  models.CharField(max_length=150, null= True, blank= True)
-    contact_garduan = PhoneNumberField(region="CD", unique=True)
+    contact_garduan = PhoneNumberField( region='CD' ,null= True, blank= True, unique= True)
     address_garduan = models.CharField(max_length=255, null= True, blank= True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -32,7 +32,7 @@ class Students(models.Model):
     
     
     class Meta:
-        db_table = 'Elèves'
+        db_table = 'students'
         verbose_name = 'élève'
         verbose_name_plural = 'élèves'
         ordering = [ 'name']

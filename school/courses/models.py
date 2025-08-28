@@ -17,6 +17,7 @@ class Courses(models.Model):
   
     
     class Meta:
+        db_table='courses'
         verbose_name = 'attribution cours'
         
         

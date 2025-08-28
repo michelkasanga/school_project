@@ -3,12 +3,14 @@ from staff.models import Staff
 from options.models import Options
 from section.models import Section
 
+
 class Classes(models.Model):
     name = models.CharField(max_length=100, unique=True, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
+        db_table='classes'
         verbose_name = 'classe'
         verbose_name_plural = 'classes'
         ordering = ['name']
@@ -30,6 +32,7 @@ class Tutors(models.Model):
     option = models.ForeignKey(Options, on_delete=models.SET_NULL, null= True, blank=True)
     
     class Meta:
+        db_table='tutors'
         verbose_name = 'Titulaire'
         verbose_name_plural = 'Titulaires'
     

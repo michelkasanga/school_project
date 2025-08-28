@@ -24,7 +24,7 @@ class Staff(models.Model):
     
     
     class Meta:
-        db_table = 'Fonctionnaires'
+        db_table = 'staff'
         verbose_name = 'fonctionnaire'
         verbose_name_plural = 'fonctionnaires'
         ordering = ['role', 'name']

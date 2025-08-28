@@ -13,6 +13,7 @@ class Fees(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
+        db_table='fees'
         verbose_name = 'frais'
         verbose_name_plural = 'frais'
         ordering = ['updated_at']  
