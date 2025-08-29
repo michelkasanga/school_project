@@ -3,6 +3,7 @@ from .models import Box
 
 class BoxForm(forms.ModelForm):
     class Meta:
+        model = Box
         fields = ['student', 'fees', 'amount_pay', 'type_paiement'],
         labels = ['Elève', 'Frais', 'Montant', 'Type de paiement']
         widgets = {

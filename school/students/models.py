@@ -11,6 +11,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Students(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=60, null= False, blank=False)
     surname = models.CharField(max_length=60, null = False, blank=False)
     first_name = models.CharField(max_length=60, null = False, blank=False)
