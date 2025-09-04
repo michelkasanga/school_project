@@ -42,19 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'phonenumber_field',
-    'classes',
-    'course',
-    'courses',
-    'fees',
-    'options',
-    'role',
-    'section',
     'staff',
     'students',
-    'box',
-    'home',
-    'profiles',
-    'info',
+    'accounts', 
+    'education',
+    'finance',
+    'general'
 ]
 
 #Taille maximale des fichiers uploades(20MB)
@@ -134,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-FR'
 
 TIME_ZONE = 'UTC'
 

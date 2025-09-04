@@ -1,15 +1,28 @@
 from django import forms
 from django.utils import timezone
-from .models import Staff
+from .models import Staff, Role
+
+
+class RoleForm(forms.ModelForm):
+    class Meta:
+        model = Role
+        fields = ['name']
+        labels = {
+            'name': 'Nom du rôle',
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 class StaffForm(forms.ModelForm):
     class Meta:
         model = Staff
-        fields = ['name', 'surname', 'first_name', 'role', 'degree', 'faculty', 'date_birthday']
+        fields = ['name', 'surname', 'firstname','sexe', 'role', 'degree', 'faculty', 'date_birthday']
         labels = {
             'name': 'Nom',
             'surname': 'Post-Nom',
-            'first_name': 'Prenom',
+            'firstname': 'Prenom',
+            'sexe': 'Sexe',
             'role': 'Rôle',
             'degree': 'Niveau d\'étude',
             'faculty': 'Domaine d\'étude',
@@ -18,14 +31,12 @@ class StaffForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'surname': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'firstname': forms.TextInput(attrs={'class': 'form-control'}),
             'role': forms.Select(attrs={'class': 'form-control'}),
             'section': forms.Select(attrs={'class': 'form-control'}),
             'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'place_of_birth': forms.TextInput(attrs={'class': 'form-control'}),
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'surname': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+        
         }
         
     def clean(self):

@@ -3,31 +3,36 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import models
-from options.models import Options
-from section.models import Section
-from classes.models import Classes
+from education.models import *
+
 from django.utils import timezone  
 from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Students(models.Model):
+    
+    SEXE_CHOICE = [
+        ('masculin', 'M'),
+        ('féminin', 'F')
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=60, null= False, blank=False)
-    surname = models.CharField(max_length=60, null = False, blank=False)
-    first_name = models.CharField(max_length=60, null = False, blank=False)
+    name = models.CharField("Nom",max_length=60, null= False, blank=False)
+    surname = models.CharField("Post Nom",max_length=60, null = False, blank=False)
+    first_name = models.CharField("Prenom",max_length=60, null = False, blank=False)
+    sexe = models.CharField(max_length=10, null=True, choices=SEXE_CHOICE)
     matricule = models.CharField(max_length=100, unique=True, blank=True)
-    classe = models.ForeignKey(Classes, on_delete=models.SET_NULL , null=True, )
+    classe = models.ForeignKey(Classes, on_delete=models.SET_NULL , null=True )
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null = True)
-    option = models.ForeignKey(Options, on_delete=models.SET_NULL, null=True)
-    date_birthday = models.DateField(null=True, blank=True)
-    place_birthday = models.CharField(max_length=60, null= True, blank= True)
-    address =  models.CharField(max_length=255, null= True, blank= True)
-    father_name =  models.CharField(max_length=150, null= True, blank= True)
-    mother_name =  models.CharField(max_length=150, null= True, blank= True)
-    garduan =  models.CharField(max_length=150, null= True, blank= True)
-    contact_garduan = PhoneNumberField( region='CD' ,null= True, blank= True, unique= True)
-    address_garduan = models.CharField(max_length=255, null= True, blank= True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    option = models.ForeignKey(Options, on_delete=models.SET_NULL, null=True, blank=True)
+    date_birthday = models.DateField("Date de naissance",null=True, blank=True)
+    place_birthday = models.CharField("Lieu de naissance",max_length=60, null= True, blank= True)
+    address =  models.CharField("Adresse",max_length=255, null= True, blank= True)
+    father_name =  models.CharField("Père",max_length=150, null= True, blank= True)
+    mother_name =  models.CharField("Mère",max_length=150, null= True, blank= True)
+    garduan =  models.CharField("Tuteur",max_length=150, null= True, blank= True)
+    contact_garduan = PhoneNumberField("Contact du tuteur", region='CD' ,null= True, blank= True, unique= True)
+    address_garduan = models.CharField("Adresse du Tuteur",max_length=255, null= True, blank= True)
+    created_at = models.DateTimeField("Date d'inscription",auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     
@@ -50,7 +55,7 @@ class Students(models.Model):
             
     #representation textuelle      
     def __str__(self):
-        return {self.name},{self.surname},{self.firstname}, {self.matricule}
+        return self.name
     
     #format de date
     def formatted_created_at(self):
@@ -59,18 +64,4 @@ class Students(models.Model):
     def formatted_updated_at(self):
         return self.updated_at.strftime("%Y-%m-%d %H:%M:%S")
     
-#creation automatique de l'utilisateur lie au fonctionnaire
-@receiver(post_save, sender=Students)    
-def create_user_for_staff(sender, instance, created, **kwargs):
-    if created and not instance.user:
-       username = instance.matricule
-       password = instance.name + instance.date_birthday.strftime("%Y%m%d")
-       user = User.objects.create_user(
-              username=username,
-              password=password,
-              first_name=instance.name,
-              last_name=instance.surname,
-              is_staff=False
-       )
-       instance.user = user
-       instance.save()
+

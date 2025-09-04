@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Détail élève - {{ nom_eleve }}</title>
+</head>
+<body>
+    <h1>Détail de {{ nom_eleve }}</h1>
+
+    <p><strong>Classe :</strong> {{ classe }}</p>
+    <p><strong>Frais :</strong> {{ type_frais }}</p>
+    <p><strong>Mois :</strong> {{ mois }}</p>
+
+    <h3>Paiements :</h3>
+    <ul>
+        {% for p in paiements %}
+            <li>Le {{ p.date }} ({{ p.mois }}) : {{ p.montant }}</li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>Total payé :</strong> {{ total }}</p>
+    <p><strong>Montant attendu :</strong> {{ attendu }}</p>
+    <p><strong>Statut :</strong> {{ statut }}</p>
+
+    <p><a href="/">← Retour à la liste</a></p>
+</body>
+</html>

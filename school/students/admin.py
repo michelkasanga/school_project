@@ -2,23 +2,43 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from .models import Students    
+from .forms import StudentsForm
 
-class StudentsInline(admin.StackedInline):
-    model = Students
-    can_delete = False
-    verbose_name_plural = 'Students'
-    fk_name = 'user' #on lie le profile a l'utilisateur
+@admin.register(Students)
+class StudentsAdmin(admin.ModelAdmin):
+    
+    form =  StudentsForm
+    list_display = ['name', 
+            'surname',
+            'first_name',
+            'sexe',
+            'matricule',
+            'classe', 
+            'section', 
+            'option', 
+            'date_birthday',
+            'place_birthday',
+            'address',
+            'father_name', 
+            'mother_name', 
+            'garduan', 
+            'contact_garduan', 
+            'address_garduan',
+            'created_at'
+            ]
     fieldsets = (
         ('Informations Élève', {
             'fields': ('name', 
                        'surname',
                        'first_name',
-                       'matricule',
+                       'sexe',
                        'classe', 
                        'section', 
                        'option', 
                        'date_birthday',
-                       'place_birthday'),
+                       'place_birthday',
+                       'address'),
+            
             'classes': ('collapse',)  # Makes the section collapsible
         }),
         ('Informations Parent et Tuteur', {
@@ -31,10 +51,3 @@ class StudentsInline(admin.StackedInline):
         }),
        
     )
-    
-class CustomUserAdmin(UserAdmin):
-    inlines = (StudentsInline,)
-    list_display = ('username', 'first_name', 'last_name', 'is_staff')  
-   
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)    

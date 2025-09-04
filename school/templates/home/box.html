@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des paiements</title>
+</head>
+<body>
+    <h1>État des paiements par classe</h1>
+
+    {% for classe, eleves in groupes_par_classe.items %}
+        <h2>Classe : {{ classe }}</h2>
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Élève</th>
+                    <th>Frais</th>
+                    <th>Mois</th>
+                    <th>Total payé</th>
+                    <th>Montant attendu</th>
+                    <th>Statut</th>
+                    <th>Détail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in eleves %}
+                    <tr>
+                        <td>{{ e.NomEleve }}</td>
+                        <td>{{ e.frais }}</td>
+                        <td>{{ e.mois }}</td>
+                        <td>{{ e.total }}</td>
+                        <td>{{ e.attendu }}</td>
+                        <td>{{ e.statut }}</td>
+                        <td><a href="{{ e.lien }}">Voir détail</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</body>
+</html>
