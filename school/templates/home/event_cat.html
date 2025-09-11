@@ -1,0 +1,145 @@
+{% include "home/includes/base.html" %}
+
+<body class="events-page">
+   <!-- NAVBAR HERE -->
+   {% include "home/includes/nav_bar.html" %}
+
+
+
+
+  <main class="main">
+
+    <!-- Page Title -->
+    
+    <div class="page-title dark-background"  {% for img in image %}style="background-image: url({{img.image.url}});" {% endfor %}>
+  
+      <div class="container position-relative">
+        <h1>Evenements</h1>
+        <p>Decouvrez les evenemens marquant de notre institution</p>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href=" {% url "general:index" %} ">Home</a></li>
+            <li class="current">Events</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+   
+    <!-- Events 2 Section -->
+    <section id="events-2" class="events-2 section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row g-4">
+          <div class="col-lg-8">
+
+            <div class="events-list">
+
+              {% for event  in events  %}
+                <div class="event-item" data-aos="fade-up" data-aos-delay="100">
+                  <div class="event-date">
+                    <span class="month"> {{event.date|date:"M"}} </span>
+                    <span class="day">  {{event.date|date:"d"}} </span>
+                    <span class="year"> {{event.date|date:"Y"}}</span>
+                  </div>
+                  <div class="event-content">
+                    
+                  
+                    <h3> {{event.title}} </h3>
+                    <div class="event-meta">
+                      <p><i class="bi bi-clock"></i>{{event.date|time:"H:i "}} - {{event.end|time:"H:i "}}</p>
+                      <p><i class="bi bi-geo-alt"></i>  {{event.place}}</p>
+
+                      {% if time < event.date  %} 
+                         <p style="color:green;"><i class="bi bi-clock"></i> {{time|timesince:event.date}} A venir </p>
+                        {% else %}
+                         <p style="color:red;" ><i class="bi bi-clock"></i> {{event.date|timesince:time}}  Passe</p>
+                        {% endif %}
+
+                    </div>
+                    <p>{{event.description|truncatewords:25}}</p>
+                    <a href="#" class="btn-event">Detail <i class="bi bi-arrow-right"></i></a>
+                  </div>
+                </div><!-- End Event Item -->
+              {% endfor %}
+
+            </div>
+
+            <div class="pagination-wrapper" data-aos="fade-up" data-aos-delay="400">
+              <ul class="pagination justify-content-center">
+                {% if events.has_previous  %}
+                  <li class="page-item active"><a class="page-link" href="?page={{events.previous_page_number}}" ><i class="bi bi-chevron-left"></i></a></li>
+                  <li class="page-item "><a class="page-link" href="">{{events.previous_page_number}}</a></li>
+                {% endif %}
+                  <li class="page-item "><a class=" btn btn-info" style="border-radius:0%;" href="?page={{events.number}} ">{{events.number}}</a></li>
+                {% if events.has_next  %}
+                 <li class="page-item"><a class="page-link" href="">{{events.next_page_number}}</a></li>
+                  <li class="page-item active"><a class="page-link" href="?page= {{events.next_page_number}} "><i class="bi bi-chevron-right"></i></a></li>
+                {% endif %}
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="col-lg-4">
+            <div class="sidebar">
+              <div class="sidebar-item" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="sidebar-title">Upcoming Events</h3>
+                <div class="event-calendar">
+                  <div class="calendar-header">
+                    <h4>June 2023</h4>
+                  </div>
+                  <div class="calendar-body">
+                    <div class="weekdays">
+                      <div>Su</div>
+                      <div>Mo</div>
+                      <div>Tu</div>
+                      <div>We</div>
+                      <div>Th</div>
+                      <div>Fr</div>
+                      <div>Sa</div>
+                    </div>
+                    <div class="days">
+                     {{calendar.days}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sidebar-item featured-event" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="sidebar-title">Featured Event</h3>
+                <div class="featured-event-content">
+                  <img src="assets/img/education/events-5.webp" alt="Featured Event" class="img-fluid">
+                  <h4>Annual Arts Festival</h4>
+                  <p><i class="bi bi-calendar-event"></i> July 15-17, 2023</p>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus consectetur adipiscing elit.</p>
+                  <a href="#" class="btn-register">Register Now</a>
+                </div>
+              </div>
+
+              <div class="sidebar-item" data-aos="fade-up" data-aos-delay="300">
+                <h3 class="sidebar-title">Event Categories</h3>
+                <div class="categories">
+                  <ul>
+                    <li><a href="#">Academic <span>(12)</span></a></li>
+                    <li><a href="#">Sports <span>(8)</span></a></li>
+                    <li><a href="#">Cultural <span>(6)</span></a></li>
+                    <li><a href="#">Workshops <span>(4)</span></a></li>
+                    <li><a href="#">Conferences <span>(3)</span></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Events 2 Section -->
+
+  </main>
+
+    <!-- ======= Footer ======= -->
+{% include "home/includes/foot.html" %}
+
+{% include "home/includes/footer.html" %}

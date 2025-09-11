@@ -56,10 +56,11 @@ class FeesForm(forms.ModelForm):
 class BoxForm(forms.ModelForm):
     class Meta:
         model = Box
-        fields = ['student', 'fees', 'amount_pay', 'type_paiement']
+        fields = ['student', 'fees', 'month','amount_pay', 'type_paiement']
         labels = {
                 'students':'Elève', 
                 'fees':'Frais', 
+                'month':'Mois',
                 'amount_pay':'Montant', 
                 'type_paiement':'Type de paiement',
                 'collector':'Collecteur',
@@ -76,6 +77,12 @@ class BoxForm(forms.ModelForm):
                 }),
             'type_paiement':forms.Select(attrs={'class':'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Exclure les élèves exempter du champ student
+        from students.models import Students
+        self.fields['student'].queryset = Students.get_students_for_payment()
 
 
 

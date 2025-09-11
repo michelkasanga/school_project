@@ -1,11 +1,12 @@
-{% load static %}
+
+{% load static %} 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - NiceSchool Bootstrap Template</title>
+  <title> {{titre|default:"Gethsemane"}} </title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -27,5 +28,9 @@
 
   <!-- Main CSS File -->
   <link href="{% static "assets/css/main.css" %}" rel="stylesheet">
+  <!-- CKEditor 5 Theme Auto -->
+  <link href="{% static 'ckeditor_theme_auto.css' %}" rel="stylesheet">
+  <!-- CKEditor 5 Theme Auto -->
+  <link href="{% static 'ckeditor_theme_auto.css' %}" rel="stylesheet">
 
 </head>

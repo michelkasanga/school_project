@@ -19,6 +19,7 @@ class StudentsAdmin(admin.ModelAdmin):
             'date_birthday',
             'place_birthday',
             'address',
+            'statut',
             'father_name', 
             'mother_name', 
             'garduan', 
@@ -37,7 +38,8 @@ class StudentsAdmin(admin.ModelAdmin):
                        'option', 
                        'date_birthday',
                        'place_birthday',
-                       'address'),
+                       'address',
+                       'statut'),
             
             'classes': ('collapse',)  # Makes the section collapsible
         }),

@@ -8,6 +8,7 @@ from django.core.files.base import ContentFile
 
 class Profiles(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(null=True, blank=True)
     avatar = models.ImageField(upload_to='avatar/', default='avatar/default.jpg', blank=True)
     
     class Meta:

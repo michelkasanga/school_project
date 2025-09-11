@@ -24,4 +24,18 @@ def get_current_user(sender, instance, **kwargs):
         if created and instance.options.count() == 0:
             option_default, _ = Options.objects.get_or_create(option = "Aucun")
             instance.options.add(option_default)
+            
     
+    
+from django.db.models import Sum, Count
+
+# Signal pour mettre à jour la table Total à chaque paiement dans la caisse
+@receiver(post_save)
+def update_total_on_box_save(sender, instance, **kwargs):
+    from .models import Box, Total
+    if not isinstance(instance, Box):
+        return
+    Total.update_totals_for_fees_and_month(instance.fees, instance.month)
+
+
+

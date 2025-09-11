@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from .models import Staff, Role
-from .forms import StaffForm, RoleForm
+from .models import Staff, Role, Dean
+from .forms import StaffForm, RoleForm, DeanForm
 
 
 @admin.register(Role)
@@ -18,8 +18,24 @@ class RoleAdmin(admin.ModelAdmin):
 @admin.register(Staff)
 class StaffAdmin(admin.ModelAdmin):
     form = StaffForm
-    list_display = ['name', 'surname', 'firstname','sexe', 'role', 'degree', 'faculty', 'matricule', 'date_birthday']
-    fields = ('name', 'surname', 'firstname','sexe', 'role', 'degree', 'faculty', 'matricule', 'date_birthday')
+    list_display = ['name', 'surname', 'firstname','sexe', 'email', 'contact', 'title','get_role', 'degree', 'faculty', 'matricule', 'date_birthday', 'admin']
+    fields = ('name', 'surname', 'firstname','sexe', 'email', 'contact', 'title', 'role', 'degree', 'faculty', 'matricule', 'date_birthday', 'admin')
     readonly_fields = ('matricule',)
+    
+    def get_role(self, obj):
+        return ", ".join([role.name for role in obj.role.all() ])
+    get_role.short_description = "Role"
+    
+    
   
-
+@admin.register(Dean)
+class DeanAdmin(admin.ModelAdmin):
+    form = DeanForm
+    list_display = ['doyen', 'section', 'option', 'get_course', 'start_date', 'end_date' ]
+    
+    def get_course(self, obj):
+        return ", ".join([course.name for course in obj.course.all()])
+    get_course.short_description = 'Course'
+    
+    def doyen(self, obj):
+        return f"{obj.staff.firstname} {obj.staff.name}"

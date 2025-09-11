@@ -22,7 +22,7 @@ class Section(models.Model):
     def formatted_updated_at(self):
         return self.updated_at.strftime("%Y-%m-%d %H:%M:%S")
     
-
+    
 #_______________________________________________________
 class Options(models.Model):
     name = models.CharField("Nom d'option",max_length=100, unique=False, null=False, blank=False)

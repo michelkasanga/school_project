@@ -1,3 +1,5 @@
+
+
 from django.contrib import admin
 from .models import *
 from .forms import *
@@ -22,7 +24,8 @@ class FeesAdmin(admin.ModelAdmin):
 @admin.register(Box)
 class BoxAdmin(admin.ModelAdmin):
     form = BoxForm
-    list_display = ['student', 'fees', 'amount_pay', 'type_paiement', 'collector', 'paid_date', 'updated_at']
+    list_display = ['student', 'fees', 'amount_pay','month', 'type_paiement', 'collector', 'paid_date', 'updated_at']
+    
     list_filter = ['fees', 'type_paiement'] #ajout de filtres
     readonly_fields = ['collector', 'updated_at'] #champs en lecture seule
     
@@ -39,4 +42,18 @@ class BoxAdmin(admin.ModelAdmin):
                 obj.collector = request.user.staff
         super().save_model(request, obj, form, change)
         
+        
 
+# Admin pour la table Total
+@admin.register(Total)
+class TotalAdmin(admin.ModelAdmin):
+    list_display = ['fees', 'month', 'nbrStudents', 'total_pay', 'total_amount', 'reste', 'statut', 'updated_at']
+    list_filter = ['fees', 'month', 'statut']
+    readonly_fields = ['fees', 'month', 'nbrStudents', 'total_pay', 'total_amount', 'reste', 'statut', 'updated_at']
+    search_fields = ['fees__name', 'month']
+
+    def has_add_permission(self, request):
+        from django.contrib import messages
+        if request.method == "GET" and request.path.endswith("/add/"):
+            return
+        return False

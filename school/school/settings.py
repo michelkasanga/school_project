@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -47,7 +49,9 @@ INSTALLED_APPS = [
     'accounts', 
     'education',
     'finance',
-    'general'
+    'general',
+    'tinymce',
+    
 ]
 
 #Taille maximale des fichiers uploades(20MB)

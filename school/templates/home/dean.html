@@ -1,0 +1,96 @@
+{% include "home/includes/base.html" %}
+
+
+<body class="faculty-staff-page">
+{% include "home/includes/nav_bar.html" %}
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" style="background-image: url(assets/img/education/showcase-1.webp);">
+      <div class="container position-relative">
+        <h1>Faculty Staff</h1>
+        <p>Esse dolorum voluptatum ullam est sint nemo et est ipsa porro placeat quibusdam quia assumenda numquam molestias.</p>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Faculty Staff</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Faculty  Staff Section -->
+    <section id="faculty--staff" class="faculty--staff section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row">
+
+
+          <div class="col-lg-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="departments-nav">
+              <h4 class="departments-title">Departments</h4>
+              <ul class="nav nav-tabs flex-column">
+                {% for option, staffs in options.items %}
+                  <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#faculty--staff-tab-1"> {{option.name}} </button>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+
+
+          <div class="col-lg-9" data-aos="fade-up" data-aos-delay="400">
+
+            {% for option, staff in options.items %}
+           
+              <div class="tab-content">
+                <div class="tab-pane fade" id="faculty--staff-tab-1">
+                  <div class="department-info mb-4">
+                    <h3>  {{option.name}}</h3>
+                  </div>
+                  <div class="row g-4">
+                    {% for staff in staffs %}
+                      <div class="col-md-6 col-lg-4" >
+                        <div class="faculty-card">
+                          <div class="faculty-image">
+                            <img src="assets/img/person/person-m-3.webp" class="img-fluid" alt="Faculty Member">
+                          </div>
+
+                          <div class="faculty-info">
+                            <h4>{{staff.name}}  </h4>
+                            <p class="faculty-title">Department Chair, Professor</p>
+                            <div class="faculty-specialties">
+                              <span>Artificial Intelligence</span>
+                              <span>Machine Learning</span>
+                            </div>
+                            <div class="faculty-contact">
+                              <a href="mailto:jbaker@example.com"><i class="bi bi-envelope"></i> Email</a>
+                              <a href="#" class="profile-link"><i class="bi bi-person"></i> Profile</a>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+
+                
+              </div>
+           {% endfor %}
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Faculty  Staff Section -->
+
+  </main>
+
+{% include "home/includes/foot.html" %}
+
+{% include "home/includes/footer.html" %}

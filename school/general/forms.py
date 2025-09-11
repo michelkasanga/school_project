@@ -1,5 +1,5 @@
 from django import forms
-from .models import Program, Testimonial, About, Service, Actuality
+from .models import Program, Testimonial, About, Actuality
 
 class TestimonialForm(forms.ModelForm):
     class Meta:
@@ -13,64 +13,49 @@ class TestimonialForm(forms.ModelForm):
         widgets = {
             'fullname': forms.TextInput(attrs={'class': 'form-control'}),
             'role': forms.Select(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control'})
         }
 
 
 class ProgramForm(forms.ModelForm):
     class Meta:
         model = Program
-        fields = ['title', 'credit', 'duration','description', 'image']
+        fields = ['title', 'credit','level',  'duration', 'condition','description', 'image']
         labels = {
             'title': 'Titre du programme',
             'credit' : 'Credit',
             'duration' : 'Durée', 
             'description': 'Description',  
+           'level':'Niveau',
         }
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'duration': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class':'form-control'})
         }
 
 
 class AboutForm(forms.ModelForm):
     class Meta:
         model = About
-        fields = ['description', 'image']
+        fields = ['description', 'mission', 'values', 'vision','image','image_2', 'team']
         labels = {
-            'description': 'Description',  
+            'description': 'Description',
+            'mission':'La mission'  ,
+            'values':'Nos valeur' ,
+            'vision':'Notre vision'   
         }
-        widgets = {
-            'description': forms.Textarea(attrs={'class':'form-control'})
-        }
-
-
-class ServiceForm(forms.ModelForm):
-    class Meta:
-        model = Service
-        fields = ['name','description', 'image']
-        labels = {
-            'name': 'Nom du service',
-            'description': 'Description',  
-        }
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class':'form-control'})
-        }
-
+      
 
 class ActualityForm(forms.ModelForm):
     class Meta:
         model = Actuality
-        fields = ['title', 'facilitator','description', 'image']
+        fields = ['title', 'facilitator','date','place', 'end','category','description','description', 'image']
         labels = {
-            'title': 'Titre d\'actualité',
+            'title': 'Titre d\'Evenement',
             'facilitator' : 'Moderateur', 
-            'description': 'Description',  
+            'description': 'Description', 
+            'end':'heure de cloture' 
         }
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'facilitator': forms.Select(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class':'form-control'})
         }

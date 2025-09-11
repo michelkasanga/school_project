@@ -8,8 +8,18 @@
 <body>
     <h1>État des paiements par classe</h1>
 
-    {% for classe, eleves in groupes_par_classe.items %}
+    {% for classe, sections in groupe_per_classe.items %}
         <h2>Classe : {{ classe }}</h2>
+
+        {% for section, options  in sections.items  %}
+        <h2>Section : {{ section }}</h2>
+
+            {% for option, mois_dic  in options.items  %}
+        <h2>Option : {{ option }}</h2>
+
+                {% for month, eleves in mois_dic.items  %}
+                  <h2>Mois : {{ month }}</h2>
+
         <table border="1" cellpadding="5">
             <thead>
                 <tr>
@@ -25,17 +35,20 @@
             <tbody>
                 {% for e in eleves %}
                     <tr>
-                        <td>{{ e.NomEleve }}</td>
-                        <td>{{ e.frais }}</td>
-                        <td>{{ e.mois }}</td>
+                        <td>{{ e.student_name }} {{ e.student_surname }}  {{ e.student_first_name }}</td>
+                        <td>{{ e.fees_name }}</td>
+                        <td>{{ e.months  }}</td>
                         <td>{{ e.total }}</td>
-                        <td>{{ e.attendu }}</td>
+                        <td>{{ e.fees_mount }}</td>
                         <td>{{ e.statut }}</td>
-                        <td><a href="{{ e.lien }}">Voir détail</a></td>
+                        <td><a href="{% url "finance:show_finance" e.id %}">Voir détail</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+              {% endfor %}
+            {% endfor %}
+        {% endfor %}
     {% endfor %}
 </body>
 </html>
