@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.urls import reverse
 
 
 
@@ -72,6 +73,8 @@ class Staff(models.Model):
     def __str__(self):
         return self.name
     
+    
+    
     #format de date
     def formatted_created_at(self):
         return self.created_at.strftime("%Y-%m-%d %H:%M:%S") # Format as needed
@@ -95,11 +98,12 @@ class Dean(models.Model):
     
     class Meta:
         db_table = 'Dean'
-        verbose_name = 'Doyen'
-        verbose_name_plural = 'Doyens'
+        verbose_name = 'Titulaire d\'option'
+        verbose_name_plural = 'Titulaires d\'options'
         
     def __str__(self):
         return f"{self.staff.name} {self.staff.firstname}"
+   
     
     def formatted_created_at(self):
         return self.created_at.strftime("%Y-%m-%d %H:%M:%S") # Format as needed

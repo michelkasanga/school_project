@@ -11,13 +11,20 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="{% url "general:index" %}" class="a">Acceuil</a></li>
-          <li ><a href="{% url "general:about" %}">A propos </a></li>
+          <li><a href="{% url "general:index" %}" class="">Acceuil</a></li>
 
-          <li><a href="{% url "staff:dean" %}">Doyen</a></li>
-          <li><a href="news.html">News</a></li>
           <li><a href="{% url "general:event" %}">Evennements</a></li>
-           <li><a href="{% url "staff:staff" %}">Staff</a></li>
+          <li><a href="{% url "general:program" %}">Programme</a></li>
+
+          <li class="dropdown"><a href="{% url "general:about" %}"><span>A propos</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul class="card">
+              <li><a hrhref="{% url "general:about" %}">A propos</a></li>
+              <li><a href="{% url "staff:dean" %}">Titulaire</a></li>
+              <li><a href="{% url "staff:staff" %}">Staff</a></li>
+             
+            </ul>
+          </li>
+         
 
           <li><a href="">Contact</a></li>
           <li><a href="" style="  " class="title">Login</a></li>

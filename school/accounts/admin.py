@@ -13,13 +13,12 @@ class ProfilesInline(admin.StackedInline):
     
 class CustomUserAdmin(UserAdmin):
     inlines = (ProfilesInline,)
-    list_display = ('username', 'first_name', 'last_name', 'is_staff', 'avatar')
+    list_display = ('username', 'first_name', 'last_name','email', 'is_staff', 'avatar_preview')
   
-    def avatar(self, obj):
-        if hasattr(obj, 'profile') and obj.profile.avatar:
-            return format_html('<img src="{}" width="50" height="50" style="object-fit: cover; border-radius: 50%;" />', obj.profile.avatar.url)
-        return "-"
-    avatar.short_description = 'Avatar'
+    def avatar_preview(self, obj):
+        if obj.profiles.avatar:
+            return format_html('<img src="{}" width="30" height="30" style="object-fit: cover; border-radius: 50%;" />', obj.profiles.avatar.url)
+    avatar_preview.short_description = 'Avatar'
     
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)

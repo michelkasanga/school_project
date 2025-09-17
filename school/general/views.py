@@ -46,7 +46,6 @@ def event(request):
         'time': timezone.now(),
         'calendar': calendar.month(int(timezone.now().year), int(timezone.now().month))  
     }
-    
     return render(request, 'home/events.html', context)
 
 def category_event(request, cat):
@@ -59,12 +58,30 @@ def category_event(request, cat):
 
 def show_event(request, id):
     event = get_object_or_404(Actuality, pk=id)
-    
+    relate_event = Actuality.objects.all().filter(category = event.category).exclude(id=event.id)
     context = {
         'event': event,
+        'titre':event.title,
+        'relate_event':relate_event 
     }
-
     return render(request, 'home/show/event.html', context)
+
+def program(request):
+    icons = ['briefcase','graph-up', 'diagram-3', 'globe', 'cloud', 'cpu', 'tree', 'people']
+    context={
+        'program' : Program.objects.all(), 
+        'icons' : icons
+    }
+    return render(request, 'home/program.html', context)
+
+def program_view(request, id):
+    program= get_object_or_404(Program, pk=id)
+    context = {
+        "program": program,
+        'titre':program.title
+    }
+    
+    return render(request, 'home/show/program.html', context)
     
         
       

@@ -26,6 +26,7 @@ def create_user_and_matricule(sender, instance, created, **kwargs):
                     password=password,
                     first_name=instance.name,
                     last_name=instance.surname,
+                    email= instance.email,
                     is_staff=True 
             )
             instance.user = user

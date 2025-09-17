@@ -14,7 +14,7 @@
         <h1>{{event.title}}</h1>
         <nav class="breadcrumbs">
           <ol>
-            <li><a href="{% url "general:index" %}">Acceuil</a></li>
+            <li><a href="{% url "general:event" %}">Evenemens</a></li>
             <li class="current">{{event.title}}</li>
           </ol>
         </nav>
@@ -59,28 +59,28 @@
               <p> {{event.description|safe}} </p>
 
              
-             
-              <div class="event-gallery mt-5" data-aos="fade-up" data-aos-delay="300">
-                <h3>Event Gallery</h3>
-                <p>Images from previous year's science exhibition:</p>
-                <div class="row g-4 mt-2">
-                  <div class="col-md-4">
-                    <a href="assets/img/education/events-1.webp" class="glightbox">
-                      <img src="assets/img/education/events-1.webp" alt="Event Gallery" class="img-fluid rounded">
-                    </a>
-                  </div>
-                  <div class="col-md-4">
-                    <a href="assets/img/education/events-2.webp" class="glightbox">
-                      <img src="assets/img/education/events-2.webp" alt="Event Gallery" class="img-fluid rounded">
-                    </a>
-                  </div>
-                  <div class="col-md-4">
-                    <a href="assets/img/education/events-3.webp" class="glightbox">
-                      <img src="assets/img/education/events-3.webp" alt="Event Gallery" class="img-fluid rounded">
-                    </a>
-                  </div>
-                </div>
-              </div>
+             {% comment %}  {% endcomment %}
+              {% comment %} <div class="event-gallery mt-5" data-aos="fade-up" data-aos-delay="300"> {% endcomment %}
+                {% comment %} <h3>Event Gallery</h3> {% endcomment %}
+                {% comment %} <p>Images from previous year's science exhibition:</p> {% endcomment %}
+                {% comment %} <div class="row g-4 mt-2"> {% endcomment %}
+                  {% comment %} <div class="col-md-4"> {% endcomment %}
+                    {% comment %} <a href="assets/img/education/events-1.webp" class="glightbox"> {% endcomment %}
+                      {% comment %} <img src="assets/img/education/events-1.webp" alt="Event Gallery" class="img-fluid rounded"> {% endcomment %}
+                    {% comment %} </a> {% endcomment %}
+                  {% comment %} </div> {% endcomment %}
+                  {% comment %} <div class="col-md-4"> {% endcomment %}
+                    {% comment %} <a href="assets/img/education/events-2.webp" class="glightbox"> {% endcomment %}
+                      {% comment %} <img src="assets/img/education/events-2.webp" alt="Event Gallery" class="img-fluid rounded"> {% endcomment %}
+                    {% comment %} </a> {% endcomment %}
+                  {% comment %} </div> {% endcomment %}
+                  {% comment %} <div class="col-md-4"> {% endcomment %}
+                    {% comment %} <a href="assets/img/education/events-3.webp" class="glightbox"> {% endcomment %}
+                      {% comment %} <img src="assets/img/education/events-3.webp" alt="Event Gallery" class="img-fluid rounded"> {% endcomment %}
+                    {% comment %} </a> {% endcomment %}
+                  {% comment %} </div> {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+              {% comment %} </div> {% endcomment %}
             </div>
           </div>
 
@@ -95,50 +95,39 @@
                     <img src="{{ event.facilitator.user.profiles.avatar.url }}" class="img-fluid rounded" alt="Organizer">
                   </div>
                   <div class="organizer-content">
-                    <h4> {{ event.facilitator.title }} {{ event.facilitator.name }} {{ event.facilitator.firstname }} </h4>
+                    <h4> <a href="{% url "accounts:profile" event.facilitator.user.id %}" class="bold" style="color:black;" > {{ event.facilitator.title }} {{ event.facilitator.name }} {{ event.facilitator.firstname }} </a> </h4>
                     <p class="organizer-position">{{ event.facilitator.role.all|join:", "}}</p>
                     <p>Pour des questions et autres, contactez:</p>
                     <div class="organizer-contact">
-                      <p><i class="bi bi-envelope"></i> {{event.facilitator.email}} </p>
-                      <p><i class="bi bi-telephone"></i>{{event.facilitator.contact}} </p>
+                      <p><i class="bi bi-envelope"></i> {% if event.facilitator.email %}{{event.facilitator.email}}{% endif %}  </p>
+                      <p><i class="bi bi-telephone"></i> {% if event.facilitator.contact %}{{event.facilitator.contact}} {% endif %} </p>
                     </div>
+                     
                   </div>
                 </div>
               </div>
 
-              <div class="sidebar-widget related-events" data-aos="fade-left" data-aos-delay="400">
+              {% if not relate_event  %}
+              {% else %}
+
+               <div class="sidebar-widget related-events" data-aos="fade-left" data-aos-delay="400">
                 <h3>Related Events</h3>
-                <div class="related-event-item">
-                  <div class="related-event-date">
-                    <span class="day">15</span>
-                    <span class="month">Nov</span>
-                  </div>
-                  <div class="related-event-info">
-                    <h4>Mathematics Olympiad</h4>
-                    <p><i class="bi bi-geo-alt"></i> Room 203, East Wing</p>
-                  </div>
-                </div>
-                <div class="related-event-item">
-                  <div class="related-event-date">
-                    <span class="day">05</span>
-                    <span class="month">Dec</span>
-                  </div>
-                  <div class="related-event-info">
-                    <h4>Literature Festival</h4>
-                    <p><i class="bi bi-geo-alt"></i> Central Library</p>
-                  </div>
-                </div>
-                <div class="related-event-item">
-                  <div class="related-event-date">
-                    <span class="day">18</span>
-                    <span class="month">Dec</span>
-                  </div>
-                  <div class="related-event-info">
-                    <h4>Annual Sports Meet</h4>
-                    <p><i class="bi bi-geo-alt"></i> School Ground</p>
-                  </div>
-                </div>
+
+                {% for relate in relate_event  %}
+                    <div class="related-event-item">
+                      <div class="related-event-date">
+                        <span class="day"> {{relate.date|date:"d"}} </span>
+                        <span class="month">{{relate.date|date:"M"}} </span>
+                      </div>
+                      <div class="related-event-info">
+                        <h4> <a href="{% url "general:show_event" relate.id %}" >{{relate.title}}  </a></h4>
+                        <p><i class="bi bi-geo-alt"></i> {{relate.place|safe}}</p>
+                      </div>
+                    </div>
+                {% endfor %}
+               
               </div>
+              {% endif %}
             </div>
           </div>
         </div>

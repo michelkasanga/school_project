@@ -24,64 +24,60 @@
     <section id="faculty--staff" class="faculty--staff section">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-
         <div class="row">
-
-
           <div class="col-lg-3" data-aos="fade-up" data-aos-delay="300">
             <div class="departments-nav">
               <h4 class="departments-title">Departments</h4>
               <ul class="nav nav-tabs flex-column">
                 {% for option, staffs in options.items %}
                   <li class="nav-item">
-                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#faculty--staff-tab-1"> {{option.name}} </button>
+                    <button class="nav-link {% if forloop.first %}active{% endif %} " data-bs-toggle="tab" data-bs-target="#faculty--staff-tab-{{ option.id }}" aria-selected= "{% if forloop.first %}true{% else %}false{% endif %} "> {{ option.name|capfirst }} </button>
                   </li>
                 {% endfor %}
               </ul>
             </div>
           </div>
 
-
-
           <div class="col-lg-9" data-aos="fade-up" data-aos-delay="400">
+            <div class="tab-content">
+              {% for option, staffs in options.items %}
 
-            {% for option, staff in options.items %}
-           
-              <div class="tab-content">
-                <div class="tab-pane fade" id="faculty--staff-tab-1">
+                <div class="tab-pane fade  {% if forloop.first %}show active{% endif %} " id="faculty--staff-tab-{{ option.id }}">
                   <div class="department-info mb-4">
-                    <h3>  {{option.name}}</h3>
+                    <h3>{{ option.name|capfirst }} </h3>
                   </div>
                   <div class="row g-4">
                     {% for staff in staffs %}
-                      <div class="col-md-6 col-lg-4" >
+
+                      <div class="col-md-6 col-lg-4">
                         <div class="faculty-card">
                           <div class="faculty-image">
-                            <img src="assets/img/person/person-m-3.webp" class="img-fluid" alt="Faculty Member">
+                            <img src="{{staff.user.profiles.avatar.url}}" class="img-fluid" alt="Faculty Member">
                           </div>
-
                           <div class="faculty-info">
-                            <h4>{{staff.name}}  </h4>
-                            <p class="faculty-title">Department Chair, Professor</p>
+                            <h4>{{ staff.title|capfirst }} {{ staff.name|capfirst }} {{ staff.firstname|capfirst }}</h4>
+                            <p class="faculty-title">{{ staff.role.all|join:", "|capfirst }}</p>
                             <div class="faculty-specialties">
-                              <span>Artificial Intelligence</span>
-                              <span>Machine Learning</span>
+                              {% if staff.dean and staff.dean.course.all %}
+                                    {% for course in staff.dean.course.all %}
+                                      <span>{{ course.name|capfirst }}</span>
+                                    {% endfor %}   
+                              {% endif %}
                             </div>
                             <div class="faculty-contact">
-                              <a href="mailto:jbaker@example.com"><i class="bi bi-envelope"></i> Email</a>
-                              <a href="#" class="profile-link"><i class="bi bi-person"></i> Profile</a>
+                              {% if staff.email %}
+                                <a href="mailto:{{ staff.email }}"><i class="bi bi-envelope"></i> Email</a>
+                              {% endif %}
+                              <a href="{% url "accounts:profile" staff.user.id %}" class="profile-link"><i class="bi bi-person"></i> Profile</a>
                             </div>
                           </div>
-                          
                         </div>
                       </div>
                     {% endfor %}
                   </div>
                 </div>
-
-                
-              </div>
-           {% endfor %}
+              {% endfor %}
+            </div>
           </div>
         </div>
 

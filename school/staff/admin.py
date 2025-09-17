@@ -31,11 +31,11 @@ class StaffAdmin(admin.ModelAdmin):
 @admin.register(Dean)
 class DeanAdmin(admin.ModelAdmin):
     form = DeanForm
-    list_display = ['doyen', 'section', 'option', 'get_course', 'start_date', 'end_date' ]
+    list_display = ['Titulaire', 'section', 'option', 'get_course', 'start_date', 'end_date' ]
     
     def get_course(self, obj):
         return ", ".join([course.name for course in obj.course.all()])
     get_course.short_description = 'Course'
     
-    def doyen(self, obj):
+    def Titulaire(self, obj):
         return f"{obj.staff.firstname} {obj.staff.name}"

@@ -21,10 +21,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('accounts.urls')),
     path('tinymce/', include('tinymce.urls')),
     path('', include('general.urls')),
     path('', include("finance.urls", namespace= "finance")),
     path('', include("staff.urls")),
+  
     
     
 ]

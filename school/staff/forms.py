@@ -61,7 +61,7 @@ class DeanForm(forms.ModelForm):
         ]
         
         labels = {
-            'staff':'Doyen', 
+            'staff':'Titulaire d\'option', 
             'course':'Cours d\'option'
         }
         

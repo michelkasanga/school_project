@@ -1,0 +1,237 @@
+{% include "home/includes/base.html" %}
+
+<body class="">
+   <!-- NAVBAR HERE -->
+
+
+ 
+  <nav id="header" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.webp" alt=""> -->
+        <i class="bi bi-money"></i>
+        <h1 class="sitename" style='color:white;'>Caisse</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url "general:index" %}" class="">Acceuil</a></li>
+          <li><a href="">Contact</a></li>
+          <li><a href="" style="  " class="title">Login</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </nav>
+
+
+<div class="container-fluid">
+  <div class="row">
+  
+
+    <main class="col-md-10 py-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Tableau de bord caisse</h3>
+        <div>
+          <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTransactionModal">Nouvelle transaction</button>
+        </div>
+      </div>
+
+      <div class="row gy-3">
+
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">Total ventes (aujourd'hui)</h6>
+              <h3 id="todaySales" class="currency"> €</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">Nombre transactions</h6>
+              <h3 id="countTx"></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-body">
+          <form class="row g-2 mb-3" method="get" action="">
+
+            <div class="col-auto">
+              <select class="form-select" name="classe">
+                <option value="">Toutes classes</option>
+                {% for c in classes %}
+                  <option value="{{ c }}" {% if selected.classe == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-auto">
+              <select class="form-select" name="section">
+                <option value="">Toutes sections</option>
+                {% for s in sections %}
+                  <option value="{{ s }}" {% if selected.section == s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-auto">
+              <select class="form-select" name="option">
+                <option value="">Toutes options</option>
+                {% for o in options %}
+                  <option value="{{ o }}" {% if selected.option == o %}selected{% endif %}>{{ o }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-auto">
+              <select class="form-select" name="fees_type">
+                <option value="">Tous types de frais</option>
+                {% for f in fees_types %}
+                  <option value="{{ f }}" {% if selected.fees_type == f %}selected{% endif %}>{{ f }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-auto">
+              <select class="form-select" name="mois">
+                <option value="">Tous les mois</option>
+                {% for m in mois_list %}
+                  <option value="{{ m }}" {% if selected.mois == m %}selected{% endif %}>{{ m }}</option>
+                {% endfor %}
+              </select>
+
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-outline-primary">Filtrer</button>
+              <a href="?" class="btn btn-outline-secondary">Effacer</a>
+            </div>
+          </form>
+
+          <div class="table-responsive">
+            <table class="table table-striped table-fixed">
+              <thead class="table-light">
+                <tr>
+                  <th>Classe</th>
+                  <th>Section</th>
+                  <th>Option</th>
+                  <th>Mois</th>
+                  <th>Type de frais</th>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Montant attendu</th>
+                  <th>Montant payé</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for classe, sections in groupe_per_classe.items %}
+                  {% for section, options in sections.items %}
+                    {% for option, mois_dict in options.items %}
+                      {% for mois, frais_dict in mois_dict.items %}
+                        {% for fees_name, infos in frais_dict.items %}
+                          {% for info in infos %}
+                            <tr>
+                              <td>{{ classe }}</td>
+                              <td>{{ section }}</td>
+                              <td>{{ option }}</td>
+                              <td>{{ mois }}</td>
+                              <td>{{ fees_name }}</td>
+                              <td><a href="{% url "finance:show_finance"  info.student_id %}"> {{ info.student_name }}</a></td>
+                              <td><a href="{% url "finance:show_finance"  info.student_id %}"> {{ info.student_first_name }}</a></td>
+                              <td>{{ info.fees_mount|floatformat:2 }} FC</td>
+                              <td>{{ info.total|floatformat:2 }} FC</td>
+                              <td>{{ info.statut }}</td>
+                            </tr>
+                          {% endfor %}
+                        {% endfor %}
+                      {% endfor %}
+                    {% endfor %}
+                  {% endfor %}
+                {% empty %}
+                  <tr><td colspan="10" class="text-center">Aucune donnée trouvée.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              <small class="text-muted">Affichage 1–{{ transactions|length }} sur {{ transactions|length }}</small>
+            </div>
+            <div>
+              <strong>Total: </strong> <span id="sumAmount" class="currency">{{ total_amount|floatformat:2 }} €</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal: Ajouter transaction -->
+<div class="modal fade" id="addTransactionModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nouvelle transaction</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="txForm">
+       
+          <div class="mb-3">
+            <label class="form-label"> Elèves</label>
+            <select class="form-select" id="txType" required>
+              {% for elev in eleves %}
+              <option value="{{elev.name}} {{elev.surname}} {{elev.first_name}} ">{{elev.name}} {{elev.surname}} {{elev.first_name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+           <div class="mb-3">
+            <label class="form-label">Type</label>
+            <select class="form-select" id="txType" required>
+              <option value="sale">Vente</option>
+              <option value="refund">Remboursement</option>
+              <option value="expense">Dépense</option>
+            </select>
+          </div>
+
+
+          <div class="mb-3">
+            <label class="form-label">Client / Source</label>
+            <input type="text" class="form-control" id="txClient">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" id="txDesc">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Montant (€)</label>
+            <input type="number" step="0.01" class="form-control" id="txAmount" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary" id="saveTx">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+{% include "home/includes/footer.html" %}

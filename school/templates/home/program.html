@@ -1,0 +1,107 @@
+{% load static %}
+{% include "home/includes/base.html" %}
+
+<body class="academics-page">
+
+{% include "home/includes/nav_bar.html" %}
+
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" style="background-image: url(assets/img/education/showcase-1.webp);">
+      <div class="container position-relative">
+        <h1>Academics</h1>
+        <p>Esse dolorum voluptatum ullam est sint nemo et est ipsa porro placeat quibusdam quia assumenda numquam molestias.</p>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Academics</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Academics Section -->
+    <section id="academics" class="academics section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="intro-wrapper">
+          <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+              <div class="intro-image">
+                <img src="{% static "assets/img/education/education-1.webp" %}" alt="Academic Programs" class="img-fluid rounded-lg shadow">
+                <div class="accent-shape"></div>
+              </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+              <div class="intro-content">
+                <span class="subtitle">Excellence in Education</span>
+                <h2>Decouvrez nos programmes</h2>
+                <p class="intro-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo. Sed non mauris vitae erat consequat auctor eu in elit.</p>
+                <div class="key-highlights">
+                  <div class="highlight-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Experiential learning opportunities</span>
+                  </div>
+                  <div class="highlight-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>World-class faculty members</span>
+                  </div>
+                  <div class="highlight-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Cutting-edge research facilities</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+     
+
+        <div class="tab-content programs-content" data-aos="fade-up" data-aos-delay="200">
+          <!-- All Programs Tab -->
+          <div class="tab-pane fade show active" id="academics-all" role="tabpanel">
+            <div class="row g-4">
+
+              {% for prog in  program %}
+                <!-- Program Item -->
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                  <div class="program-item undergraduate">
+                    <div class="program-header">
+                      <div class="program-icon">
+                        <i class="bi bi-{{icons|random}} "></i>
+                      </div>
+                      <span class="program-type"> {{prog.level}} </span>
+                    </div>
+                    <div class="program-body">
+                      <h3>{{prog.title}}</h3>
+                      <p>{{prog.description|truncatewords:25|safe}}</p>
+                      <ul class="program-details">
+                        <li><i class="bi bi-clock"></i> {{prog.duration}}</li>
+                        <li><i class="bi bi-people"></i> {{ prog.credit }} credit{{ prog.credit|pluralize:"s" }} </li>
+                      </ul>
+                    </div>
+                    <div class="program-footer">
+                      <a href="{% url "general:show_program" prog.id %}" class="program-link">Voir Plus <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+
+       
+        </div>
+      </div>
+
+    </section><!-- /Academics Section -->
+
+  </main>
+
+    
+{% include "home/includes/foot.html" %}
+{% include "home/includes/footer.html" %}

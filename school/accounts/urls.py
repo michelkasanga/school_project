@@ -3,6 +3,8 @@ from . import views
 
 app_name = "accounts"
 
-urlpatterns = {
-    path('login/',views.login_view ,name="login"),
-}
+urlpatterns = [
+    path('profile/<int:user_id>/',views.profile ,name="profile"),
+    
+]
+    

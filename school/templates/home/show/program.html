@@ -1,0 +1,64 @@
+{% include "home/includes/base.html" %}
+
+<body class="news-details-page">
+
+{% include "home/includes/nav_bar.html" %}
+
+  <!-- Page Title -->
+    <div class="page-title dark-background" style="background-image: url({{program.image.url}});">
+      <div class="container position-relative">
+        <h1>{{program.title|capfirst}}</h1>
+         <nav class="breadcrumbs">
+          <ol>
+            <li><a href="{% url "general:program" %}">Programmes</a></li>
+            <li class="current">{{program.title}}</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+
+ <!-- Blog Details Section -->
+    <section id="blog-details" class="blog-details section">
+      <div class="container" data-aos="fade-up">
+
+        <article class="article">
+          <div class="article-header">
+            <h1 class="title" data-aos="fade-up" data-aos-delay="100"> {{program.title}} </h1>
+
+            <div class="article-meta" data-aos="fade-up" data-aos-delay="200">
+              <div class="post-info">
+                <span><i class=""></i> Durée : {{program.duration}} </span>
+                <span><i class="bi bi-people"></i>  {{ program.credit }} credit{{ program.credit|pluralize:"s" }} </span>
+                 <span><i ></i>Niveau : {{program.level}} </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-featured-image" data-aos="zoom-in">
+            <img src="{{program.image.url}}" alt="UI Design Evolution" class="img-fluid">
+          </div>
+
+          <div class="article-wrapper">
+            <aside class="table-of-contents" data-aos="fade-left">
+              <h3>Conditions</h3>
+              <nav>
+                {{program.condition|safe}}
+              </nav>
+            </aside>
+
+            <div class="article-content">
+              <div class="content-section" id="introduction" data-aos="fade-up">
+
+                <p> {{program.description|safe}} </p>
+              </div>
+
+            </div>
+          </div>
+
+        </article>
+
+      </div>
+    </section><!-- /Blog Details Section -->
+{% include "home/includes/foot.html" %}
+{% include "home/includes/footer.html" %}
