@@ -1,0 +1,39 @@
+
+{% include "home/includes/base.html" %}
+<pre class="bg-light text-dark p-2 mb-3">{{ groupe_frais|safe }}</pre>
+<section class="container py-4">
+    <div class="row justify-content-center">
+        {% for frais, mois_dict in groupe_frais.items %}
+            <div class="col-12 mb-3">
+                <h4 class="fw-bold text-primary">{{ frais }}</h4>
+            </div>
+            {% for mois, infos in mois_dict.items %}
+                {% for info in infos %}
+                    <div class="col-md-8 col-lg-6 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-info text-dark">
+                                <h5 class="mb-0">{{ info.student_name }} {{ info.student_surname }} {{ info.student_first_name }}</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="mb-2"><span class="fw-bold text-secondary">Montant Frais :</span> <span class="badge bg-success">{{ info.fees_mount|floatformat:0 }} FC</span></div>
+                                <div class="mb-2"><span class="fw-bold text-secondary">Mois :</span> <span class="badge bg-primary text-white">{% if info.months == 1 %}Septembre{% elif info.months == 2 %}Octobre{% elif info.months == 3 %}Novembre{% elif info.months == 4 %}Décembre{% elif info.months == 5 %}Janvier{% elif info.months == 6 %}Février{% elif info.months == 7 %}Mars{% elif info.months == 8 %}Avril{% elif info.months == 9 %}Mai{% elif info.months == 10 %}Juin{% else %}{{ info.months }}{% endif %}</span></div>
+                                <div class="mb-2"><span class="fw-bold text-secondary">Détails paiement :</span></div>
+                                <ul class="list-group list-group-flush mb-2">
+                                    {% for paiement in info.details_paiement %}
+                                        <li class="list-group-item">-le <span class="text-primary">{{ paiement.date }}</span> paye <span class="fw-bold">{{ paiement.montant|floatformat:0 }} FC</span></li>
+                                    {% endfor %}
+                                </ul>  {{paiement.id }}
+                                <div class="mb-2"><span class="fw-bold text-secondary">Statut :</span></div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Dette : <span class="fw-bold text-danger">{{ info.dette|floatformat:0 }}</span></li>
+                                    <li class="list-group-item">Total payé : <span class="fw-bold text-success">{{ info.total|floatformat:0 }}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+</section>
+

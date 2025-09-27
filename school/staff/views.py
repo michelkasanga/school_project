@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Staff, Dean
+from general.models import *
 from django.core.paginator import Paginator
 
 
@@ -28,7 +29,7 @@ def dean(request):
 
 
 def staff(request):
-    staff = Staff.objects.all()
+    staff = Staff.objects.only('id', 'name', 'surname', 'firstname', 'title', 'role')
     paginator = Paginator(staff,10 )
     
     page_number = request.GET.get("page")
@@ -36,7 +37,7 @@ def staff(request):
     
     context = {
        'staffs':staffs,
-       'titre':"Staff"
+       'titre':"Staff",
     }
     
     return render(request, 'home/staff.html', context)

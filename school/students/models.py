@@ -16,8 +16,8 @@ class Students(models.Model):
         ('feminin', 'Feminin')
     ]
     STATUT_CHOICE = [
-        ('scolariser', 'Scolariser 🟡 '),
-        ('exempter', 'Exempter 🟢')
+        ('scolariser', 'Scolariser'),
+        ('exempter', 'Exempter')
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -55,7 +55,7 @@ class Students(models.Model):
         if not self.id and not self.matricule:
             super().save(*args, **kwargs)  # Première sauvegarde pour avoir l'ID
             from django.utils import timezone
-            self.matricule = f"{timezone.now().year}{self.id} - {self.name[:1].upper()}"
+            self.matricule = f"{timezone.now().year}0{self.id} - {self.name[:1].upper()}"
             super().save(update_fields=['matricule'])  # Mise à jour du matricule uniquement
         else:
             super().save(*args, **kwargs)

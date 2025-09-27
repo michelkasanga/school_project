@@ -5,10 +5,11 @@ import os
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
+from django.utils.html import format_html
 
 class Profiles(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(null=True, blank=True)
+    bio = models.TextField(null=True, blank=True, max_length= 120)
     avatar = models.ImageField(upload_to='avatar/', default='avatar/default.jpg', blank=True)
     
     class Meta:
@@ -35,3 +36,9 @@ class Profiles(models.Model):
                     save=False
                 )
         super().save(*args, **kwargs)
+        
+        def avatar_preview(self, obj):
+            if obj.avatar:
+             return format_html('<img src="{}" width="30" height="30" style="object-fit: cover; border-radius: 50%;" />', obj.avatar.url)
+            return "-"
+        avatar_preview.short_description = 'avatar'

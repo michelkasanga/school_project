@@ -31,7 +31,7 @@
                     <img src="{{staff.user.profiles.avatar.url}}" alt="Principal" class="img-fluid">
                   </div>
                   <div class="leader-info">
-                    <h4>  {{staff.title}} {{staff.firstname}} {{staff.name}} </h4>
+                    <h4> <a href="{% url "accounts:profile" staff.user.id %}" class="profile-link"> {{staff.title}} {{staff.firstname}} {{staff.name}} </a> </h4>
                
                     <p class="faculty-title" >{{ staff.role.all|join:", "}}</p>
                    
@@ -42,6 +42,7 @@
                     {% endif %}
                   </div>
                 </div>
+               
               </div>
             {% endfor %}
           </div>
@@ -49,7 +50,7 @@
             <div class="pagination-wrapper" data-aos="fade-up" data-aos-delay="400">
               <ul class="pagination justify-content-center">
                 {% if staffs.has_previous  %}
-                  <li class="page-item active"><a class="page-link" href="?page={{events.previous_page_number}}" ><i class="bi bi-chevron-left"></i></a></li>
+                  <li class="page-item active"><a class="page-link" href="?page={{staffs.previous_page_number}}" ><i class="bi bi-chevron-left"></i></a></li>
                   <li class="page-item "><a class="page-link" href="">{{staffs.previous_page_number}}</a></li>
                 {% endif %}
                   <li class="page-item "><a class=" btn btn-info" style="border-radius:0%;" href="?page={{staffs.number}} ">{{staffs.number}}</a></li>

@@ -1,6 +1,7 @@
 from django.db import models
 from  staff.models import Staff
 from tinymce.models import HTMLField
+from phonenumber_field.modelfields import PhoneNumberField
 
 """
 program = title, credit, duration, description, image
@@ -54,7 +55,27 @@ class CategorieEvenement(models.TextChoices):
     #TEC_GAMING = "TEC_GAMING", "E-sport & Gaming"
 
 
-
+class Hero(models.Model):
+    title = models.CharField("titre", max_length= 100)
+    message = models.TextField("message", max_length= 500, blank=False)
+    video = models.FileField(upload_to="hero/", default="hero/default.mp4")
+    open_date = models.DateTimeField('date d\'ouverture')
+    close_date = models.DateTimeField('date de cloture')
+    register_date = models.DateTimeField('date d\'inscription')
+    
+    class Meta:
+        db_table = 'Hero'
+        verbose_name = 'Bienvenu'
+        
+        
+class Contact(models.Model):
+    email = models.EmailField()
+    tel = PhoneNumberField("Téléphone", region='CD' ,null= True, blank= True, unique= True)
+    address = models.TextField('Adresse', blank=False)
+    hours_operation = HTMLField('Heure de travail', blank=True)
+        
+    
+    
 
 class Program(models.Model):
     title = models.CharField("Titre",max_length=100)
@@ -105,7 +126,7 @@ class Actuality(models.Model):
     facilitator = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)
     hours = models.TimeField(null=True)
     place = models.CharField("Lieu",max_length= 100, null=True)
-    category = models.CharField("Categorie",max_length=255 ,choices= CategorieEvenement, default= "DIV_FESTIVAL" , null=True )
+    category = models.CharField("Categorie",max_length=255 ,choices= CategorieEvenement.choices, default= "DIV_FESTIVAL" , null=True )
     date = models.DateTimeField('date et heure d\'ouverture', null=True)
     end = models.TimeField("heure de cloture", null=True)
     image = models.ImageField(upload_to='actuality_images/', null=True)

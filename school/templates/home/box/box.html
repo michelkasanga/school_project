@@ -104,8 +104,8 @@
             <div class="col-auto">
               <select class="form-select" name="mois">
                 <option value="">Tous les mois</option>
-                {% for m in mois_list %}
-                  <option value="{{ m }}" {% if selected.mois == m %}selected{% endif %}>{{ m }}</option>
+                {% for mois in mois_list %}
+                  <option value="{{ mois }}" {% if selected.mois == mois %}selected{% endif %}>{% if mois == 1 %}Septembre{% elif mois == 2 %}Octobre{% elif mois == 3 %}Novembre{% elif mois == 4 %}Décembre{% elif mois == 5 %}Janvier{% elif mois == 6 %}Février{% elif mois == 7 %}Mars{% elif mois == 8 %}Avril{% elif mois == 9 %}Mai{% elif mois == 10 %}Juin{% else %}{{ mois }}{% endif %}</option>
                 {% endfor %}
               </select>
 
@@ -145,8 +145,8 @@
                               <td>{{ option }}</td>
                               <td>{{ mois }}</td>
                               <td>{{ fees_name }}</td>
-                              <td><a href="{% url "finance:show_finance"  info.student_id %}"> {{ info.student_name }}</a></td>
-                              <td><a href="{% url "finance:show_finance"  info.student_id %}"> {{ info.student_first_name }}</a></td>
+                              <td><a href="{% url "finance:show_box" info.student_id %}" class="btn btn-sm btn-info">{{ info.student_name }}</a></td>
+                              <td><a href="{% url "finance:show_box" info.student_id %}" class="btn btn-sm btn-info">{{ info.student_first_name }}</a></td>
                               <td>{{ info.fees_mount|floatformat:2 }} FC</td>
                               <td>{{ info.total|floatformat:2 }} FC</td>
                               <td>{{ info.statut }}</td>
@@ -193,9 +193,9 @@
           <div class="mb-3">
             <label class="form-label"> Elèves</label>
             <select class="form-select" id="txType" required>
-              {% for elev in eleves %}
-              <option value="{{elev.name}} {{elev.surname}} {{elev.first_name}} ">{{elev.name}} {{elev.surname}} {{elev.first_name}}</option>
-              {% endfor %}
+              {% comment %} {% for elev in eleves %} {% endcomment %}
+              {% comment %} <option value="{{elev.name}} {{elev.surname}} {{elev.first_name}} ">{{elev.name}} {{elev.surname}} {{elev.first_name}}</option> {% endcomment %}
+              {% comment %} {% endfor %} {% endcomment %}
             </select>
           </div>
 

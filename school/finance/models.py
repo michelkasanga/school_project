@@ -36,7 +36,7 @@ class Fees(models.Model):
         ordering = ['updated_at']  
     
     def __str__(self):
-        return self.name
+        return f"{self.name} {self.amount}"
     
     def formatted_created_at(self):
         return self.created_at.strftime("%Y-%m-%d %H:%M:%S")
@@ -80,7 +80,7 @@ class Box(models.Model):
         return f"{self.student} - {self.fees.name} - {self.get_month_display()}"
     
         
-    def add_payment(self, amount):
+    def add_payment(self, *amount):
         """
         Ajoute un paiement pour l'élève, le frais et le mois courant (stocké comme entier).
         Si le total payé atteint le montant du frais, l'excédent est reporté sur le mois suivant.
@@ -126,6 +126,7 @@ class Total(models.Model):
         from .models import Box  # Import différé pour éviter les problèmes de dépendance
         from django.db.models import Sum
         from decimal import Decimal
+        
         total_pay = Box.objects.filter(fees=fees, month=month).aggregate(Sum('amount_pay'))['amount_pay__sum'] or 0
         nbrStudents = Box.objects.filter(fees=fees, month=month).values('student').distinct().count()
         # Le montant total à payer ne doit pas dépasser le montant du fees * nombre d'élèves
@@ -184,6 +185,7 @@ def update_total_on_box_change(sender, instance, **kwargs):
         from .models import Box  # Import différé pour éviter les problèmes de dépendance
         from django.db.models import Sum
         from decimal import Decimal
+        
         total_pay = Box.objects.filter(fees=fees, month=month).aggregate(Sum('amount_pay'))['amount_pay__sum'] or 0
         nbrStudents = Box.objects.filter(fees=fees, month=month).values('student').distinct().count()
         # Le montant total à payer ne doit pas dépasser le montant du fees * nombre d'élèves

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Program, Testimonial, About, Actuality
+from .models import Program, Testimonial, About, Actuality, Hero, Contact
 
 class TestimonialForm(forms.ModelForm):
     class Meta:
@@ -59,3 +59,13 @@ class ActualityForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'facilitator': forms.Select(attrs={'class': 'form-control'}),
         }
+        
+class HeroForm(forms.ModelForm):
+    class Meta:
+        model = Hero
+        fields = ['title','message', 'open_date', 'close_date', 'register_date', 'video']
+    
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['email','tel', 'address', 'hours_operation']

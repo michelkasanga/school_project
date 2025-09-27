@@ -109,7 +109,7 @@ class Courses(models.Model):
     course = models.ManyToManyField(Course, related_name="course")
     classe = models.ManyToManyField(Classes, related_name="classe" )
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
-    option = models.ForeignKey(Options, on_delete=models.SET_NULL, null=True)
+    option = models.ForeignKey(Options, on_delete=models.SET_NULL, null=True, blank=True)
     
     class Meta:
         db_table='courses'

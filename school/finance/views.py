@@ -1,20 +1,37 @@
+
 from django.shortcuts import render, get_object_or_404
-from .models import Box, Fees
+from .models import Box, Fees, MonthChoice
 from students.models import Students
 from staff.models import Staff
+from general.models import *
 from django.db.models import Sum
+from django.http import HttpResponseForbidden
 
+def role_required(role):
+    def decorator(view_func):
+        def _wrapped_view(request, *args, **kwargs):
+            if not request.user.is_authenticated:
+                return HttpResponseForbidden("⛔ vous devez etre connecté")
+            if not hasattr(request.user, 'staff') or not request.user.staff.role != role:
+                return HttpResponseForbidden("⛔ Accès interdit")
+            return view_func(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
 
+#@role_required('caisse')
 def index_box(request):
     
     
 
     # Récupérer les filtres depuis la requête GET
+    
     classe = request.GET.get('classe')
     section = request.GET.get('section')
     option = request.GET.get('option')
     fees_type = request.GET.get('fees_type')
     mois = request.GET.get('mois')
+  
+    
 
     filters = {}
     if classe:
@@ -59,6 +76,7 @@ def index_box(request):
         section = paiement["student__section__name"] if paiement["student__section__name"] else ""
         option = paiement["student__option__name"] if paiement["student__option__name"] else ""
         mois_val = paiement["month"]
+        label_month = MonthChoice(mois_val).label
 
         # Ajout pour les filtres
         if classe: classes.add(classe)
@@ -76,9 +94,21 @@ def index_box(request):
 
         rest = fees_mount - total
         statut = (
-            f"En ordre avec le mois de {mois_val}" if rest == 0
-            else f"Une dette de {rest}"
+            f"En ordre avec {label_month}" if rest == 0 else f"Une dette de {rest}"
         )
+
+        paiements_details = Box.objects.filter(
+            student__id=student_id,
+            fees__name=fees_name,
+            month=mois_val
+        ).values('paid_date', 'amount_pay')
+        details_paiement = [
+            {
+                'date': p['paid_date'].strftime('%d %B %Y'),
+                'montant': float(p['amount_pay'])
+            }
+            for p in paiements_details
+        ]
 
         info = {
             "student_id": student_id,
@@ -86,10 +116,12 @@ def index_box(request):
             "student_surname": student_surname,
             "student_first_name": student_first_name,
             "fees_name": fees_name,
-            "months": mois_val,
+            "months": label_month,
             "total": total,
             "fees_mount": fees_mount,
             "statut": statut,
+            "details_paiement": details_paiement,
+            "dette": rest,
             "id": paiement["student__id"],
             "section": section,
             "option": option,
@@ -102,11 +134,11 @@ def index_box(request):
         if option not in groupe_per_classe[classe][section]:
             groupe_per_classe[classe][section][option] = {}
         if mois_val not in groupe_per_classe[classe][section][option]:
-            groupe_per_classe[classe][section][option][mois_val] = {}
-        if fees_name not in groupe_per_classe[classe][section][option][mois_val]:
-            groupe_per_classe[classe][section][option][mois_val][fees_name] = []
+            groupe_per_classe[classe][section][option][label_month] = {}
+        if fees_name not in groupe_per_classe[classe][section][option][label_month]:
+            groupe_per_classe[classe][section][option][label_month][fees_name] = []
 
-        groupe_per_classe[classe][section][option][mois_val][fees_name].append(info)
+        groupe_per_classe[classe][section][option][label_month][fees_name].append(info)
 
     return render(request, "home/box/box.html", {
         "groupe_per_classe": groupe_per_classe,
@@ -123,44 +155,64 @@ def index_box(request):
             "mois": mois,
         },
         'titre':'Caisse',
-        'eleves':Students.objects.all().filter(statut='scolariser')
+        'eleves':Students.objects.all().filter(statut='scolariser'),
+        "contacts": Contact.objects.all()[:1]
     })
     
+def show_box(request, student_id):
 
-
-def show_box(request, eleve_id):
-    eleve = get_object_or_404(Students, id=eleve_id)
-    paiements = Box.objects.filter(student= eleve).select_related("fees")
-    
-    details = []
-    total = 0
-    attendu = 0
-    mois = None
-    type_frais = None
-    
-    for p in paiements:
-        details.append({
-            "date":p.paid_date.strftime("%d %B %Y"),
-            "mois":p.month,
-            "montant":p.amount_pay,
+    paiements = Box.objects.filter(student__id=student_id)# Récupérer tous les paiements de l'élève
+    # Regrouper par frais et mois
+    from collections import defaultdict
+    groupe_frais = defaultdict(lambda: defaultdict(list))
+    # Regroupement unique par frais/mois
+    unique_frais_mois = {}
+    for paiement in paiements:
+        
+        mois_val = paiement.month
+        fees_name = paiement.fees.name
+        id_fees  = paiement.id
+        key = f"{fees_name}_{mois_val}"
+        
+        if key not in unique_frais_mois:
+            unique_frais_mois[key] = {
+                "student_id": paiement.student.id,
+                "student_name": paiement.student.name,
+                "student_surname": paiement.student.surname,
+                "student_first_name": paiement.student.first_name,
+                "fees_name": fees_name,
+                "months": mois_val,
+                "fees_mount": float(paiement.fees.amount),
+                "details_paiement": [],
+            }
+        unique_frais_mois[key]["details_paiement"].append({
+            'date': paiement.paid_date.strftime('%d %B %Y'),
+            'montant': float(paiement.amount_pay)
         })
-        
-        total += p.amount_pay
-        attendu = p.fees.amount
-        mois = p.month
-        type_frais = p.fees.name
-        
-    reste = attendu - total
-    statut = f"En ordre avec le mois de {mois}" if reste == 0 else f"Une dette de {reste}"
-    context = {
-        "nom_eleve": eleve.name,
-        "classe": eleve.classe.name, # ⚠️ adapte si ton Student n’a pas ce champ
-        "type_frais": type_frais,
-        "mois": mois,
-        "paiements": details,
-        "total": total,
-        "attendu": attendu,
-        "statut": statut,
-    }
+    # Calcul total et dette pour chaque frais/mois
+    groupe_frais = {}
+    for info in unique_frais_mois.values():
+        total = sum([p['montant'] for p in info['details_paiement']])
+        rest = info['fees_mount'] - total
+        info['total'] = total
+        info['dette'] = rest
+        info['statut'] = f"En ordre avec le mois de {info['months']}" if rest == 0 else f"Une dette de {rest}"
+        frais_name = info['fees_name']
+        mois_val = info['months']
+        if frais_name not in groupe_frais:
+            groupe_frais[frais_name] = {}
+        groupe_frais[frais_name][mois_val] = [info]
+    # Conversion en dict pour le template
+    def deep_dict(d):
+        if isinstance(d, dict):
+            return {k: deep_dict(v) for k, v in d.items()}
+        elif isinstance(d, list):
+            return [deep_dict(i) for i in d]
+        else:
+            return d
+    groupe_frais_dict = deep_dict(dict(groupe_frais))
+    return render(request, "home/box/show_box.html", {
+        "groupe_frais": groupe_frais_dict,
+    })
     
-    return render(request, "home/show_box.html", context)
+  

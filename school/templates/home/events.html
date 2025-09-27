@@ -83,39 +83,22 @@
 
           <div class="col-lg-4">
             <div class="sidebar">
-              <div class="sidebar-item" data-aos="fade-up" data-aos-delay="100">
-                <h3 class="sidebar-title">Upcoming Events</h3>
-                <div class="event-calendar">
-                  <div class="calendar-header">
-                    <h4>June 2023</h4>
-                  </div>
-                  <div class="calendar-body">
-                    <div class="weekdays">
-                      <div>Su</div>
-                      <div>Mo</div>
-                      <div>Tu</div>
-                      <div>We</div>
-                      <div>Th</div>
-                      <div>Fr</div>
-                      <div>Sa</div>
-                    </div>
-                    <div class="days">
-                     {{calendar.days}}
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div class="sidebar-item" data-aos="fade-up" data-aos-delay="300">
-                <h3 class="sidebar-title">Event Categories</h3>
-                <div class="categories">
-                  <ul>
-                    {% comment %} {% for event, cat in category.items  %} {% endcomment %}
-                    {% comment %} <li><a href="#"> {{cat}} <span>(12)</span></a></li> {% endcomment %}
-                    {% comment %} {% endfor %} {% endcomment %}
-                  </ul>
+             
+
+              {% if categories %}
+                <div class="sidebar-item" data-aos="fade-up" data-aos-delay="300">
+                  <h3 class="sidebar-title">Event Categories</h3>
+                  <div class="categories">
+                    <ul>
+                        <li><a href="{% url "general:event"%}" > Tout Affichez <span>({{all}})</span></a></li>
+                        {% for cat in categories  %}
+                        <li><a href="{% url "general:event_category" cat.key %}"> {{cat.label}} <span>({{cat.nombre}})</span></a></li>
+                        {% endfor %}
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              {% endif %}
             </div>
           </div>
         </div>

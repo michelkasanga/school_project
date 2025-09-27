@@ -8,8 +8,8 @@
   <main class="main">
 
     <!-- Page Title -->
-    {% for head  in about %}
-      <div class="page-title dark-background" style="background-image: url({{head.image.url}});">
+    
+      <div class="page-title dark-background" style="background-image: url({{about.image.url}});">
         <div class="container position-relative">
           <h1>A propos</h1>
           <p>Decouvrez nos marques</p>
@@ -21,57 +21,57 @@
           </nav>
         </div>
       </div>
-    {% endfor %}
+   
     <!-- End Page Title -->
 
     <!-- History Section -->
     <section id="history" class="history section">
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-        {% for ab in about  %}
+        
           <div class="row align-items-center g-5">
             <div class="col-lg-6">
               <div class="about-content" data-aos="fade-up" data-aos-delay="200">
                 <h3> Résumé</h3>
                 <h2></h2>
-                <p>{{ab.description|safe}}</p>
+                <p>{{about.description|safe}}</p>
               </div>
             </div>
 
             <div class="col-lg-6">
               <div class="about-image" data-aos="zoom-in" data-aos-delay="300">
-                <img src="{{ab.image_2.url}}" alt="Campus" class="img-fluid rounded">
+                <img src="{{about.image_2.url}}" alt="Campus" class="img-fluid rounded">
 
                 <div class="mission-vision" data-aos="fade-up" data-aos-delay="400">
                   <div class="mission">
                     <h3>Notre Mission</h3>
-                    <p>{{ab.mission|safe}}</p>
+                    <p>{{about.mission|safe}}</p>
                   </div>
 
                   <div class="vision">
                     <h3>Notre Vision</h3>
-                    <p>{{ab.vision|safe}}</p>
+                    <p>{{about.vision|safe}}</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        {% endfor %}
+        
 
         <div class="row mt-5">
           <div class="col-lg-12">
             <div class="core-values" data-aos="fade-up" data-aos-delay="500">
               <h3 class="text-center mb-4">Nos Valeurs</h3>
               <div class="row row-cols-1 row-cols-md-4 row-cols-lg-4 g-4">
-                {% for val in  about %}
+               
                   <div class="col-lg-12">
                     <div class="value-card">
                       <div class="value-icon">
                         <i class="bi bi-star"></i>
                       </div>
-                      <p>{{val.values|safe}}</p>
+                      <p>{{about.values|safe}}</p>
                     </div>
                   </div>
-                {% endfor %}
+               
               </div>
             </div>
           </div>
@@ -124,17 +124,17 @@
               </div>
             </div>  
 
-            {% for stat in about %}
+            {% if about %}
               <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
                 <div class="about-image">
-                  {% if stat.team %}
-                    <img src="{{stat.team.url}}" alt="Our Leadership Team" class="img-fluid rounded">
+                  {% if about.team %}
+                    <img src="{{about.team.url}}" alt="Our Leadership Team" class="img-fluid rounded">
                     {% else %}
                      <p>-</p>
                     {% endif %}
                 </div>
               </div>
-            {% endfor %} 
+            {% endif %} 
           </div>
 
         <div class="leadership-team">

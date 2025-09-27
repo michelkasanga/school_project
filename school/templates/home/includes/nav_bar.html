@@ -2,7 +2,7 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="{% url "general:index" %}" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.webp" alt=""> -->
         <i class="bi bi-buildings"></i>
@@ -26,8 +26,40 @@
           </li>
          
 
-          <li><a href="">Contact</a></li>
-          <li><a href="" style="  " class="title">Login</a></li>
+          <li><a href="{% url "general:contact" %}">Contact</a></li>
+          
+          {% if user.is_authenticated %}
+            <li class="dropdown"><span>Profile</span> <i class="bi bi-chevron-down toggle-dropdown"></i>
+              <ul class="card">
+                
+              <li>
+                {% if user.is_authenticated and current_student %}
+                 <a href="{% url "accounts:profile_students" user.id %}" style="  " class="text-primary">  
+                  {% if user.first_name and  user.last_name %} 
+                  {{user.first_name}} {{user.last_name}} 
+                  {% else %} 
+                  {{user.username}} 
+                  {% endif %}  
+                </a>
+                {% else %}
+                <a href="{% url "accounts:profile" user.id %}" style="  " class="text-primary">  
+                  {% if user.first_name and  user.last_name %} 
+                  {{user.first_name}} {{user.last_name}} 
+                  {% else %} 
+                  {{user.username}} 
+                  {% endif %}  
+                </a>
+                {% endif %}
+               
+                  </li>
+                    <li><a href="{% url "accounts:logout" %}" style="  " class="text-danger">Deconnexion</a></li>
+                {% else %}
+                  <li><a href="{% url "accounts:login" %}" style="  " class="title">Connexion</a></li>
+             
+              </ul>
+            </li>
+          {% endif %}
+        
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>

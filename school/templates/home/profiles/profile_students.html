@@ -1,0 +1,157 @@
+{% include "home/includes/base.html" %}
+
+
+<body class="profile">
+
+    <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="{% url "general:index" %}" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.webp" alt=""> -->
+        <i class="bi bi-arrow-left text-warning fs-5"></i>
+     
+      </a>
+      {% if user.is_authenticated and user.id == profile.id %}
+            <nav id="navmenu" class="navmenu">
+              <ul>
+                    <li><a href="{% url "accounts:logout" %}" class="text-danger">Deconnexion</a></li>
+              </ul>
+              <i class="mobile-nav-toggle d-xl-none bi bi-list auto"></i>
+            </nav>
+      {% endif %}
+    </div>
+  </header>
+
+
+  <div class="container-fluid p-0 position-relative">
+   <div class="page-title dark-background" style="max-height:20px; background: skyblue;" ></div>
+   {% if profile %}
+    <img src="{{profile.avatar.url}} " alt="Avatar" class="rounded-circle border border-white position-absolute" style="width:120px; bottom:-60px; left:20px;">
+   {% endif %}
+  </div>
+
+  <!-- Info utilisateur -->
+  <section class="container  ms-auto mt-auto">
+    <div class="d-flex justify-content-between align-items-start "  >
+      <div>
+        {% if students %}
+          <h2 class="mb-1">{{ students.name|capfirst }} {{ students.surname|capfirst }} {{ students.first_name|capfirst }}</h2>
+          <h6 class="text-muted ">  <span class="bi bi-mortarboard-fill"></span> {{students.classe |capfirst }}  {% if students.option %} {{students.option}} {% else %}  {{students.section}} {% endif %}</h6>
+          <h6 class="text-muted ">  <span class="bi bi-person-badge-fill"></span> {{students.matricule}} </h6>
+          <h6 class="text-muted ">  <span class="bi bi-person-fill"></span> {{students.sexe}} </h6>
+          <h6 class="text-muted ">  <span class="bi bi-geo-alt-fill"></span> {{students.address}} </h6>
+            <h6 class="text-muted ">  <span class="bi bi-calendar-fill"></span> {{age}} ans,  {% if students.sexe == "masculin" %} Né{% else %}Née{% endif %} le {{students.date_birthday}} </h6>
+          {% else %}
+              {% if user.first_name and user.last_name  %}
+                 <h2 class="mb-1"> {{ user.first_name|capfirst }} {{ user.last_name|capfirst }}</h2>
+                 {% else %}
+                  <h2 class="mb-1"> {{ user.username|capfirst }} </h2>
+               {% endif %}
+
+          {% endif %}
+
+      </div>
+    
+     
+    </div>
+    {% if profile %}
+    <p class="mt-2" > {% if profile.bio %}{{profile.bio}}{% endif %}</p>
+    {% endif %}
+
+    <!-- Statistiques -->
+    
+
+    <!-- Onglets -->
+  
+
+   
+ 
+        <div class="row">
+          <div class="col-lg-5" data-aos="fade-up" data-aos-delay="300">
+            <div class="departments-nav">
+              
+                <ul class="nav nav-tabs">
+                <li class="nav-item" ><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#faculty--staff-tab-1">Information supplementaire</button></li>
+                </ul>
+            </div>
+          </div>
+
+          <div class="cards" data-aos="fade-up" data-aos-delay="400">
+            <div class="tab-content">
+
+                <div class="tab-pane fade  show active " id="faculty--staff-tab-1">
+      
+                  <div class="row g-4">
+
+                      <div class="col-md-6 col-lg-4">
+                        <p><h4 class="mb-2 text-muted">___Tuteur___  </h4></p>
+                        <div class="faculty-card ">
+                              <div class="faculty-info ">
+                                <div class="faculty-specialties" style=" " >
+                                  <h6 class=" bi bi-person" > {{students.garduan}} </h6>
+                                  <h6 class=" bi bi-phone"> {{students.contact_garduan}} </h6>
+                                  <h6 class=" bi bi-geo-alt-fill"> {{students.address_garduan}} </h6>
+                                </div>
+                              </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 col-lg-4">
+                        <p> <h4 class="mb-2 text-muted">___Parents___  </h4></p>
+                        <div class="faculty-card ">
+                              <div class="faculty-info ">
+                                <div class="faculty-specialties" style=" " >
+                                  <h6 class=" bi bi-gender-male" > {{students.father_name}} </h6>
+                                  <h6 class=" bi bi-gender-female"> {{students.mother_name}} </h6>
+                                </div>
+                              </div>
+                        </div>
+                      </div>
+
+                      {% if paiements %}
+                      <div class="col-md-6 col-lg-4">
+                        <p> <h4 class="mb-2 text-muted">___Finance___  </h4></p>
+                        <div class="faculty-card ">
+                              <div class="faculty-info ">
+
+                                <div class="faculty-specialties mb-2 " style=" " >
+                                 {% if type_frais %} <h6 class=" bi bi-money" >{{ type_frais}}<strong> {{ attendu }}  </strong></h6>{% endif %}
+                                 {% if mois  %} <h6 class=" bi bi-calendar" > {{ mois }} </h6>{% endif %}
+                                </div>  
+                                  <p> <h5 class="mb-2 text-muted">_______________________________</h5></p>
+                                <div class="faculty-specialties mb-2 " style=" " >
+                                  <p> <h5 class="mb-2 text-muted">Paiement</h5></p>
+                                  {% if paiements %}
+                                   {% for p in paiements %}
+                                      {% if p.date %} <h6 class=" bi bi-money" >{{ p.date}} </h6>{% endif %}
+                                      {% if p.mois  %} <h6 class=" bi bi-calendar" > {{ p.mois }} </h6>{% endif %}
+                                      {% if p.montant  %} <h6 class=" bi bi-calendar" > {{ p.montant }} </h6>{% endif %}
+                                   {% endfor %}
+                                  {% endif %}
+                                </div>
+                                    <p> <h5 class="mb-2 text-muted">_______________________________</h5></p>
+                                 <div class="faculty-specialties mb-2 " style=" " >
+                                   <p> <h5 class="mb-2 text-muted">Resultats</h5></p>
+                                 {% if total %} <h6 class=" bi bi-money" > <span class="text-muted"> Total payer: </span> <strong> {{ total }}  </strong></h6>{% endif %}
+                                 {% if statut  %} <h6 class=" bi bi-calendar" >  <span class="text-muted"> Statut: </span>  <strong> {{ statut }}  </strong> </h6>{% endif %}
+                                </div>
+
+                              </div>
+                        </div>
+                      </div>
+                      {% endif %}
+
+                  </div>
+                </div>
+
+            </div>
+          </div>
+       
+  </section>
+
+  
+{% include "home/includes/foot.html" %}
+
+{% include "home/includes/footer.html" %}
+

@@ -827,7 +827,7 @@ url("./fonts/bootstrap-icons.woff?e34853135f9e39acf64315236852cd5a") format("wof
 .bi-hourglass-split::before { content: "\f41f"; }
 .bi-hourglass-top::before { content: "\f420"; }
 .bi-hourglass::before { content: "\f421"; }
-.bi-house-door-fill::before { content: "\f422"; }
+.bi-house-door-fill::before { content: "\f422"2; }
 .bi-house-door::before { content: "\f423"; }
 .bi-house-fill::before { content: "\f424"; }
 .bi-house::before { content: "\f425"; }
@@ -838,7 +838,7 @@ url("./fonts/bootstrap-icons.woff?e34853135f9e39acf64315236852cd5a") format("wof
 .bi-image::before { content: "\f42a"; }
 .bi-images::before { content: "\f42b"; }
 .bi-inbox-fill::before { content: "\f42c"; }
-.bi-inbox::before { content: "\f42d"; }
+.bi-inbox::before { content: "\f42d"; }2
 .bi-inboxes-fill::before { content: "\f42e"; }
 .bi-inboxes::before { content: "\f42f"; }
 .bi-info-circle-fill::before { content: "\f430"; }

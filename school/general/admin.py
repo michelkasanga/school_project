@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Program, Testimonial, About,Actuality
-from .forms import ProgramForm, TestimonialForm, AboutForm, ActualityForm
+from .models import *
+from .forms import *
 from django.utils.html import format_html
 
 
@@ -31,7 +31,6 @@ class TestimonialAdmin(admin.ModelAdmin):
     image_preview.short_description = 'image'
     
     
-
 @admin.register(Actuality)
 class ActualityAdmin(admin.ModelAdmin):
     form = ActualityForm
@@ -63,6 +62,16 @@ class AboutAdmin(admin.ModelAdmin):
            return format_html('<img src="{}" width="30" height="30" style="object-fit: cover; border-radius: 50%;" />', obj.image_2.url)
         return "-"
     image_preview.short_description = 'image'
+    
+@admin.register(Hero)
+class HeroAdmin(admin.ModelAdmin):
+    form = HeroForm
+    list_display = ["title", "open_date", "close_date", "register_date"]
+    
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    form = ContactForm
+    list_display = ["email" ,"tel", "address"]
         
     
     

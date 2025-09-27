@@ -1,0 +1,34 @@
+{% extends 'home/index.html' %}
+{% block content %}
+<div class="container">
+    <h2>Détails financiers de l'élève</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Type de frais</th>
+                <th>Mois</th>
+                <th>Montant attendu</th>
+                <th>Montant payé</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ type_frais }}</td>
+                <td>{{ mois }}</td>
+                <td>{{ attendu }}</td>
+                <td>{{ total }}</td>
+                <td>{{ statut }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4>Historique des paiements</h4>
+    <ul>
+        {% for paiement in paiements %}
+        <li>{{ paiement.date }} - {{ paiement.mois }} : {{ paiement.montant }} FC</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+

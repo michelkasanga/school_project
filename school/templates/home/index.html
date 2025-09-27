@@ -9,64 +9,65 @@
     <!-- Hero Section -->
     <section id="hero" class="hero section dark-background">
 
-      <div class="hero-container">
-        <video autoplay="" muted="" loop="" playsinline="" class="video-background">
-          <source src="assets/img/education/video-2.mp4" type="video/mp4">
-        </video>
-        <div class="overlay"></div>
-        <div class="container">
-          <div class="row align-items-center">
-            <div class="col-lg-7" data-aos="zoom-out" data-aos-delay="100">
-              <div class="hero-content">
-                <h1>Empowering Futures Through Education</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae diam ornare, imperdiet est eget, pretium augue. Nullam auctor felis in nibh gravida, eu viverra risus egestas.</p>
-                <div class="cta-buttons">
-                  <a href="#" class="btn-primary">Start Your Journey</a>
-                  <a href="#" class="btn-secondary">Discover Programs</a>
+        <div class="hero-container">
+          <video autoplay="" muted="" loop="" playsinline="" class="video-background">
+            <source src="{{hr.video.url}}" type="video/mp4">
+          </video>
+          <div class="overlay"></div>
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-lg-7" data-aos="zoom-out" data-aos-delay="100">
+                <div class="hero-content">
+                  <h1>{{hr.title}}</h1>
+                  <p>{{hr.message}}</p>
+                  <div class="cta-buttons">
+                   {% comment %}  <a href="#" class="btn-primary">Start Your Journey</a> {% endcomment %}
+                    <a href="{% url "general:program" %}" class="btn-primary">Decouvrez Nos Programmes</a>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-lg-5" data-aos="zoom-out" data-aos-delay="200">
-              <div class="stats-card">
-                <div class="stats-header">
-                  <h3>Why Choose Us</h3>
-                  <div class="decoration-line"></div>
-                </div>
-                <div class="stats-grid">
-                  <div class="stat-item">
-                    <div class="stat-icon">
-                      <i class="bi bi-trophy-fill"></i>
-                    </div>
-                    <div class="stat-content">
-                      <h4>98%</h4>
-                      <p>Graduate Employment</p>
-                    </div>
+              <div class="col-lg-5" data-aos="zoom-out" data-aos-delay="200">
+                <div class="stats-card">
+                  <div class="stats-header">
+                    <h3>Pourquoi Nous Choisir</h3>
+                    <div class="decoration-line"></div>
                   </div>
-                  <div class="stat-item">
-                    <div class="stat-icon">
-                      <i class="bi bi-globe"></i>
+                  <div class="stats-grid">
+                    <div class="stat-item">
+                      <div class="stat-icon">
+                        <i class="bi bi-trophy-fill"></i>
+                      </div>
+                      <div class="stat-content">
+                        <h4>98%</h4>
+                        <p>Reussite</p>
+                      </div>
                     </div>
-                    <div class="stat-content">
-                      <h4>45+</h4>
-                      <p>International Partners</p>
-                    </div>
-                  </div>
-                  <div class="stat-item">
-                    <div class="stat-icon">
-                      <i class="bi bi-mortarboard"></i>
-                    </div>
-                    <div class="stat-content">
-                      <h4>15:1</h4>
-                      <p>Student-Faculty Ratio</p>
-                    </div>
-                  </div>
-                  <div class="stat-item">
-                    <div class="stat-icon">
-                      <i class="bi bi-building"></i>
-                    </div>
-                    <div class="stat-content">
-                      <h4>120+</h4>
-                      <p>Degree Programs</p>
+                    {% comment %} <div class="stat-item"> {% endcomment %}
+                      {% comment %} <div class="stat-icon"> {% endcomment %}
+                        {% comment %} <i class="bi bi-globe"></i> {% endcomment %}
+                      {% comment %} </div> {% endcomment %}
+                      {% comment %} <div class="stat-content"> {% endcomment %}
+                        {% comment %} <h4>45+</h4> {% endcomment %}
+                        {% comment %} <p>International Partners</p> {% endcomment %}
+                      {% comment %} </div> {% endcomment %}
+                    {% comment %} </div> {% endcomment %}
+                    {% comment %} <div class="stat-item"> {% endcomment %}
+                      {% comment %} <div class="stat-icon"> {% endcomment %}
+                        {% comment %} <i class="bi bi-mortarboard"></i> {% endcomment %}
+                      {% comment %} </div> {% endcomment %}
+                      {% comment %} <div class="stat-content"> {% endcomment %}
+                        {% comment %} <h4>15:1</h4> {% endcomment %}
+                        {% comment %} <p>Student-Faculty Ratio</p> {% endcomment %}
+                      {% comment %} </div> {% endcomment %}
+                    {% comment %} </div> {% endcomment %}
+                    <div class="stat-item">
+                      <div class="stat-icon">
+                        <i class="bi bi-building"></i>
+                      </div>
+                      <div class="stat-content">
+                        <h4>{{program_count}}+</h4>
+                        <p>Programmes d'Etude</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -74,30 +75,32 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="event-ticker">
-        <div class="container">
-          <div class="row gy-4">
-            <div class="col-md-6 col-xl-4 col-12 ticker-item">
-              {% comment %} <span class="date">NOV 15</span> {% endcomment %}
-              {% comment %} <span class="title">Open House Day</span> {% endcomment %}
-              {% comment %} <a href="#" class="btn-register">Register</a> {% endcomment %}
-            </div>
-            <div class="col-md-6 col-12 col-xl-4  ticker-item">
-              {% comment %} <span class="date">DEC 5</span> {% endcomment %}
-              {% comment %} <span class="title">Application Workshop</span> {% endcomment %}
-              {% comment %} <a href="#" class="btn-register">Register</a> {% endcomment %}
-            </div>
-            <div class="col-md-6 col-12 col-xl-4 ticker-item">
-              {% comment %} <span class="date">JAN 10</span> {% endcomment %}
-              {% comment %} <span class="title">International Student Orientation</span> {% endcomment %}
-              {% comment %} <a href="#" class="btn-register">Register</a> {% endcomment %}
+        <div class="event-ticker">
+          <div class="container">
+            <div class="row gy-4">
+
+              <div class="col-md-6 col-xl-4 col-12 ticker-item">
+                <span class="date">{{hr.open_date|date:"M d Y"}}</span>
+                <span class="title">Ouverture</span>
+               
+              </div>
+
+              <div class="col-md-6 col-12 col-xl-4  ticker-item">
+                <span class="date">{{hr.register_date|date:"M d Y"}}</span>
+                <span class="title">Date d'Inscription</span>
+                {% comment %} <a href="#" class="btn-register">Register</a> {% endcomment %}
+              </div>
+
+              <div class="col-md-6 col-12 col-xl-4 ticker-item">
+                <span class="date">{{hr.close_date|date:"M d Y"}}</span>
+                <span class="title">Date de cloture</span>
+                
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
+      
     </section><!-- /Hero Section -->
 
     <!-- About Section -->
@@ -106,9 +109,9 @@
         <div class="row mb-5">
           <div class="col-lg-6 pe-lg-5" data-aos="fade-right" data-aos-delay="200">
             <h2 class="display-6 fw-bold mb-4">A Propos  <span> de Nous</span></h2>
-            {% for descript in about %}
-              <p class="lead mb-4"> {{descript.description|truncatewords:20|safe}} </p>
-            {% endfor %}
+          
+              <p class="lead mb-4"> {{about.description|truncatewords:20|safe}} </p>
+          
 
             <div class="d-flex flex-wrap gap-4 mb-4">
               <div class="stat-box">
@@ -126,26 +129,30 @@
             </div>
 
             <div class="d-flex align-items-center mt-4 signature-block">
-              <div class="ms-3">
-                <p class="mb-0 fw-bold">Dr. Elizabeth Morgan</p>
-                <p class="mb-0 text-muted">Principal</p>
-              </div>
+              {% if principal %}
+                
+                  <div class="ms-3">
+                    <p class="mb-0 fw-bold">  {{principal.title}} {{principal.firstname}}   {{principal.name}} </p>
+                    <p class="mb-0 text-muted">Principal</p>
+                  </div>
+            
+              {% endif %}
             </div>
           </div>
-          {% for img in about  %}
+     
             <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
               <div class="image-stack">
                 <div class="image-stack-item image-stack-item-top" data-aos="zoom-in" data-aos-delay="400">
-                  <img src="{{img.image.url}}" alt="{{img.image}}" class="img-fluid rounded-4 shadow-lg">
+                  <img src="{{about.image.url}}" alt="{{about.image}}" class="img-fluid rounded-4 shadow-lg">
                 </div>
                 <div class="image-stack-item image-stack-item-bottom" data-aos="zoom-in" data-aos-delay="500">
-                  <img src="{{img.image_2.url}}" alt="{{img.image}}" class="img-fluid rounded-4 shadow-lg">
+                  <img src="{{about.image_2.url}}" alt="{{about.image}}" class="img-fluid rounded-4 shadow-lg">
                 </div>
               </div>
             </div>
-          {% endfor %}
+        
         </div>
-        {% for mv in about %}
+    
           <div class="row mission-vision-row g-4">
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
               <div class="value-card h-100">
@@ -153,7 +160,7 @@
                   <i class="bi bi-rocket-takeoff"></i>
                 </div>
                 <h3>Notre Mission</h3>
-                <p>{{mv.mission|truncatewords:20|safe}}</p>
+                <p>{{about.mission|truncatewords:20|safe}}</p>
               </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
@@ -162,7 +169,7 @@
                   <i class="bi bi-eye"></i>
                 </div>
                 <h3>Notre Vision</h3>
-                <p>{{mv.vision|truncatewords:20|safe}}</p>
+                <p>{{about.vision|truncatewords:20|safe}}</p>
               </div>
             </div>
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
@@ -171,11 +178,11 @@
                   <i class="bi bi-star"></i>
                 </div>
                 <h3>Nos Valeurs</h3>
-                <p>{{mv.values|truncatewords:20|safe}}</p>
+                <p>{{about.values|truncatewords:20|safe}}</p>
               </div>
             </div>
           </div>
-        {% endfor %}
+     
       </div>
 
     </section><!-- /About Section -->
@@ -222,7 +229,7 @@
                           {% comment %} <span><i class="bi bi-calendar3"></i></span> {% endcomment %}
                         </div>
                         <p> {{ prog.description|truncatewords:20|safe }} </p> 
-                        <a href="#" class="program-btn"><span> voir plus</span> <i class="bi bi-arrow-right"></i></a>
+                        <a href="{% url "general:show_program" prog.id %}" class="program-btn"><span> Detail</span> <i class="bi bi-arrow-right"></i></a>
                       </div>
                     </div>
                   </div>

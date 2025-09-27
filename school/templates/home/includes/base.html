@@ -6,13 +6,24 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title> {{titre|default:"Gethsemane"}} </title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+  <title> {% block title %}{{titre|default:"Gethsemane"}} {% endblock title %} </title>
+
+  <meta name="description" content="une ecole de référence avec une bonne education">
+  <meta name="keywords" content="Gethsemane, lubumbashi, école, éducation, diplome">
+
+  <meta name="facebook:card" content="summary_large_image">
+  <meta name="facebook:title" content="{{titre|default:"Gethsemane"}}">
+  <meta name="facebook:description" content="une ecole de référence avec une bonne education">
+  <meta name="facebook:image" content="{% static "assets/img/logo.png" %} ">
+
+
+
+
 
   <!-- Favicons -->
   <link href="{% static "assets/img/favicon.png" %} " rel="icon">
   <link href="{% static "assets/img/apple-touch-icon.png" %} " rel="apple-touch-icon">
+
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -28,6 +39,13 @@
 
   <!-- Main CSS File -->
   <link href="{% static "assets/css/main.css" %}" rel="stylesheet">
+ <style>  
+    .mb-3 label[for*="id_avatar"]{display:none;}
+     .mb-3 label[for="avatar-clear_id"]{display:none;}
 
+     .mb-3 a[href*="media/avatar"]{ display:none;}
+     .mb-3 input[type="checkbox"]{display:none;}
+
+</style>
 
 </head>
