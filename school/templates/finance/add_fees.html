@@ -1,0 +1,27 @@
+{% include "home/includes/base.html" %}
+
+{% block content %}
+
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Ajouter le frais</h4>
+                </div>
+                <div class="card-body bg-light">
+                    <form id="payment-form" method="post" action="{% url 'finance:add_fees' %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'finance:index_fees' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Annuler</a>
+                            <button type="submit" class="btn btn-success px-4"><i class="bi bi-check2-circle"></i> Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

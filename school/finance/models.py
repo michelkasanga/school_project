@@ -47,10 +47,6 @@ class Fees(models.Model):
     
     #__________________________________________
 class Box(models.Model):
-
-
-
-   
     TYPE_PAIEMENT_CHOICES = [
         ('espece', 'Espèces'),
         ('cheque', 'Chèque'),
@@ -58,7 +54,6 @@ class Box(models.Model):
         ('carte', 'Carte bancaire'),
     ]
     
- 
     student = models.ForeignKey(Students, on_delete= models.CASCADE, null=False, blank=False )
     fees = models.ForeignKey(Fees, on_delete= models.CASCADE, null=False, blank=False )
     amount_pay = models.DecimalField("Montant", max_digits=10, decimal_places=2)

@@ -1,0 +1,74 @@
+
+{% include 'home/includes/base.html' %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Ajouter un paiement</h4>
+                </div>
+                <div class="card-body bg-light">
+                    <form id="payment-form" method="post" action="{% url 'finance:add_payment' %}">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'finance:index_finance' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Annuler</a>
+                            <button type="submit" class="btn btn-success px-4"><i class="bi bi-check2-circle"></i> Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charger jQuery dans le <head> du template principal ou ici si besoin -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#id_student').on('change', function() {
+        var studentId = $(this).val();
+        $.ajax({
+            url: "{% url 'finance:fees_for_student' %}",
+            data: { student_id: studentId },
+            dataType: 'json',
+            success: function(data) {
+                var feesSelect = $('#id_fees');
+                feesSelect.empty();
+                if (data.fees.length === 0) {
+                    feesSelect.append($('<option>', {
+                        value: '',
+                        text: 'Aucun frais disponible'
+                    }));
+                } else {
+                    $.each(data.fees, function(index, fee) {
+                        feesSelect.append($('<option>', {
+                            value: fee.id,
+                            text: fee.name + ' (' + fee.amount + ' FC)'
+                        }));
+                    });
+                }
+            },
+            error: function() {
+                alert('Erreur lors du chargement des frais.');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+
+

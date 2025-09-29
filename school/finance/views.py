@@ -1,11 +1,15 @@
-
-from django.shortcuts import render, get_object_or_404
+from .forms import BoxForm
+from collections import defaultdict
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Box, Fees, MonthChoice
+from .forms import FeesForm
 from students.models import Students
 from staff.models import Staff
+from django.utils import timezone
 from general.models import *
 from django.db.models import Sum
 from django.http import HttpResponseForbidden
+from django.views.decorators.cache import cache_page
 
 def role_required(role):
     def decorator(view_func):
@@ -18,22 +22,18 @@ def role_required(role):
         return _wrapped_view
     return decorator
 
+@cache_page(60 * 5)  # 5 minutes
 #@role_required('caisse')
 def index_box(request):
-    
-    
-
     # Récupérer les filtres depuis la requête GET
-    
     classe = request.GET.get('classe')
     section = request.GET.get('section')
     option = request.GET.get('option')
     fees_type = request.GET.get('fees_type')
     mois = request.GET.get('mois')
-  
-    
 
     filters = {}
+    
     if classe:
         filters["student__classe__name"] = classe
     if section:
@@ -140,7 +140,12 @@ def index_box(request):
 
         groupe_per_classe[classe][section][option][label_month][fees_name].append(info)
 
-    return render(request, "home/box/box.html", {
+    
+    today = timezone.localdate()
+    transactions_today = Box.objects.filter(paid_date__date=today)
+    total_today = transactions_today.aggregate(total=models.Sum('amount_pay'))['total'] or 0
+    count_today = transactions_today.count()
+    return render(request, "finance/box.html", {
         "groupe_per_classe": groupe_per_classe,
         "classes": sorted(classes),
         "sections": sorted(sections),
@@ -156,24 +161,23 @@ def index_box(request):
         },
         'titre':'Caisse',
         'eleves':Students.objects.all().filter(statut='scolariser'),
-        "contacts": Contact.objects.all()[:1]
+        "contacts": Contact.objects.all()[:1],
+        "total_today": total_today,
+        "count_today": count_today,
     })
     
 def show_box(request, student_id):
 
     paiements = Box.objects.filter(student__id=student_id)# Récupérer tous les paiements de l'élève
     # Regrouper par frais et mois
-    from collections import defaultdict
     groupe_frais = defaultdict(lambda: defaultdict(list))
     # Regroupement unique par frais/mois
     unique_frais_mois = {}
     for paiement in paiements:
-        
         mois_val = paiement.month
         fees_name = paiement.fees.name
-        id_fees  = paiement.id
+        fee_id = paiement.fees.id
         key = f"{fees_name}_{mois_val}"
-        
         if key not in unique_frais_mois:
             unique_frais_mois[key] = {
                 "student_id": paiement.student.id,
@@ -184,10 +188,12 @@ def show_box(request, student_id):
                 "months": mois_val,
                 "fees_mount": float(paiement.fees.amount),
                 "details_paiement": [],
+                "fee_id": fee_id,
             }
         unique_frais_mois[key]["details_paiement"].append({
             'date': paiement.paid_date.strftime('%d %B %Y'),
-            'montant': float(paiement.amount_pay)
+            'montant': float(paiement.amount_pay),
+            'payment_id': paiement.id
         })
     # Calcul total et dette pour chaque frais/mois
     groupe_frais = {}
@@ -211,8 +217,88 @@ def show_box(request, student_id):
         else:
             return d
     groupe_frais_dict = deep_dict(dict(groupe_frais))
-    return render(request, "home/box/show_box.html", {
+    return render(request, "finance/show_box.html", {
         "groupe_frais": groupe_frais_dict,
     })
-    
-  
+
+def add_payment(request):
+    if request.method == 'POST':
+        form = BoxForm(request.POST)
+      
+        if form.is_valid():
+            payment =  form.save()
+            return redirect('finance:print_receipt', payment_id=payment.id)
+    else:
+        form = BoxForm()
+    return render(request, 'finance/add_payment_modal.html', {'form': form})
+
+def edit_payment(request, payment_id):
+    payment = get_object_or_404(Box, pk=payment_id)
+    if request.method == 'POST':
+        from .forms import BoxForm
+        form = BoxForm(request.POST, instance=payment)
+        if form.is_valid():
+            form.save()
+            return redirect('finance:show_box', student_id=payment.student.id)
+    else:
+        from .forms import BoxForm
+        form = BoxForm(instance=payment)
+    return render(request, 'finance/edit_payment.html', {'form': form, 'payment': payment})
+
+def print_receipt(request, payment_id):
+    payment = get_object_or_404(Box, pk=payment_id)
+    student = payment.student
+    total = Box.objects.filter(student=student).aggregate(total=Sum('amount_pay'))['total']
+    attendu = payment.fees.amount if hasattr(payment, 'fees') else None
+    statut = "Payé" if total and attendu and total >= attendu else "Partiel"
+    context = {
+        'nom_eleve': f"{student.name} {student.surname} {student.first_name}",
+        'classe': student.classe.name if hasattr(student, 'classe') else '',
+        'option': student.option.name if student.option else '',
+        'matricule': student.matricule,
+        'section':student.section.name if student.section else '',
+        'type_frais': payment.fees.name if hasattr(payment, 'fees') else '',
+        'mois': payment.get_month_display,
+        'paiement': payment,
+        'total': total,
+        'attendu': attendu,
+        'statut': statut,
+    }
+    return render(request, 'finance/receipt.html', context)
+
+def index_fees(request):
+    fees = Fees.objects.only('id', 'name', 'amount' )
+    return render(request, 'finance/fees.html', {'fees': fees})
+
+def add_fee(request):
+    if request.method == 'POST':
+        form = FeesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('finance:index_fees') # Redirige vers la fiche des frais
+    else:
+        form = FeesForm()
+    return render(request, 'finance/add_fees.html', {'form': form})
+
+   
+def edit_fee(request, fee_id):
+    fee = get_object_or_404(Fees, pk=fee_id)
+    if request.method == 'POST':
+        form = FeesForm(request.POST, instance=fee)
+        if form.is_valid():
+            form.save()
+            return redirect('finance:index_fees' ) # Redirige vers la fiche élève, à adapter si besoin
+    else:
+        form = FeesForm(instance=fee)
+    return render(request, 'finance/edit_fee.html', {'form': form, 'fee': fee})
+
+
+def delete_fees(request, fee_id):
+    fee = get_object_or_404(Fees, pk=fee_id)
+    if request.method == 'POST':
+        fee.delete()
+        return redirect('finance:index_fees')
+   
+
+
+

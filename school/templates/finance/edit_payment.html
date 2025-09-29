@@ -1,0 +1,45 @@
+{% include "home/includes/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Modifier le paiement</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <a href="{% url 'finance:show_box' payment.student.id %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#id_student').on('change', function() {
+        var studentId = $(this).val();
+        $.ajax({
+            url: "{% url 'finance:fees_for_student' %}",
+            data: { student_id: studentId },
+            dataType: 'json',
+            success: function(data) {
+                var feesSelect = $('#id_fees');
+                feesSelect.empty();
+                if (data.fees.length === 0) {
+                    feesSelect.append($('<option>', {
+                        value: '',
+                        text: 'Aucun frais disponible'
+                    }));
+                } else {
+                    $.each(data.fees, function(index, fee) {
+                        feesSelect.append($('<option>', {
+                            value: fee.id,
+                            text: fee.name + ' (' + fee.amount + ' FC)'
+                        }));
+                    });
+                }
+            },
+            error: function() {
+                alert('Erreur lors du chargement des frais.');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

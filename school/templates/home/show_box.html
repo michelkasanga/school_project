@@ -14,7 +14,12 @@
     <h3>Paiements :</h3>
     <ul>
         {% for p in paiements %}
-            <li>Le {{ p.date }} ({{ p.mois }}) : {{ p.montant }}</li>
+            <li>Le {{ p.date }} ({{ p.mois }}) : {{ p.montant }}
+                <!-- Bouton d'impression du reçu -->
+                <a href="{% url 'finance:print_receipt' p.id %}" target="_blank">
+                    <button type="button">Imprimer le reçu</button>
+                </a>
+            </li>
         {% endfor %}
     </ul>
 

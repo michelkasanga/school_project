@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu de paiement</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .receipt-box {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px #eee;
+        }
+        .print-btn { display: none; }
+        @media print {
+            .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-box">
+        <h2>Reçu de paiement</h2>
+        <p><strong> COMPLEXE SCOLAIRE GETHSEMANE</strong></p>
+        <hr>
+        <p><strong>Élève :</strong> {{ nom_eleve }} | <strong>{{matricule}}  </strong> </p>
+        <p><strong>Classe :</strong> {{ classe }} {% if option %}  {{ classe }} {% endif %} </p>
+        <p><strong>Type de frais :</strong> {{ type_frais }}</p>
+        <p><strong>Mois :</strong> {{ mois }}</p>
+        <p><strong>Date de paiement :</strong> {{ paiement.paid_date|date:"d M Y" }}</p>
+        <hr>
+        <p><strong>Montant payé :</strong> {{ paiement.amount_pay }} Franc congolais </p>
+        <button class="print-btn" onclick="window.print()">Imprimer</button>
+    </div>
+</body>
+</html>

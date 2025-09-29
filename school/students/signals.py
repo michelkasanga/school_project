@@ -14,7 +14,7 @@ def create_user_and_matricule(sender, instance, created, **kwargs):
             nm = instance.name[:1].upper() if instance.name else 'X'
             tmz = timezone.now()
             
-            instance.matricule =  f"{timezone.now().year}0{id_stf} - {nm}"
+            instance.matricule =  f"{timezone.now().year}0{id_stf}-{nm}"
             instance.save(update_fields=["matricule"]) 
             
         if not instance.user:
@@ -24,8 +24,8 @@ def create_user_and_matricule(sender, instance, created, **kwargs):
             user = User.objects.create_user(
                     username=username,
                     password=password,
-                    first_name=instance.name,
-                    last_name=instance.surname,
+                    first_name=instance.first_name,
+                    last_name=instance.name,
                     is_staff=False
             )
             instance.user = user

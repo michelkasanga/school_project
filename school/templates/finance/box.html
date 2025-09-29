@@ -36,17 +36,18 @@
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Tableau de bord caisse</h3>
         <div>
-          <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTransactionModal">Nouvelle transaction</button>
+          <a href="{% url 'finance:add_payment' %}" class="btn btn-primary me-2">Ajouter un paiement</a>
         </div>
       </div>
 
-      <div class="row gy-3">
+  <!-- Formulaire d'ajout retiré, ajout classique par page dédiée -->
+  <div class="row gy-3">
 
         <div class="col-md-4">
           <div class="card">
             <div class="card-body">
               <h6 class="card-subtitle mb-2 text-muted">Total ventes (aujourd'hui)</h6>
-              <h3 id="todaySales" class="currency"> €</h3>
+              <h3 id="todaySales" class="currency">{{ total_today }} FC</h3>
             </div>
           </div>
         </div>
@@ -55,7 +56,7 @@
           <div class="card">
             <div class="card-body">
               <h6 class="card-subtitle mb-2 text-muted">Nombre transactions</h6>
-              <h3 id="countTx"></h3>
+              <h3 id="countTx">{{ count_today }}</h3>
             </div>
           </div>
         </div>
@@ -179,57 +180,6 @@
   </div>
 </div>
 
-<!-- Modal: Ajouter transaction -->
-<div class="modal fade" id="addTransactionModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Nouvelle transaction</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form id="txForm">
-       
-          <div class="mb-3">
-            <label class="form-label"> Elèves</label>
-            <select class="form-select" id="txType" required>
-              {% comment %} {% for elev in eleves %} {% endcomment %}
-              {% comment %} <option value="{{elev.name}} {{elev.surname}} {{elev.first_name}} ">{{elev.name}} {{elev.surname}} {{elev.first_name}}</option> {% endcomment %}
-              {% comment %} {% endfor %} {% endcomment %}
-            </select>
-          </div>
-
-           <div class="mb-3">
-            <label class="form-label">Type</label>
-            <select class="form-select" id="txType" required>
-              <option value="sale">Vente</option>
-              <option value="refund">Remboursement</option>
-              <option value="expense">Dépense</option>
-            </select>
-          </div>
-
-
-          <div class="mb-3">
-            <label class="form-label">Client / Source</label>
-            <input type="text" class="form-control" id="txClient">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Description</label>
-            <input type="text" class="form-control" id="txDesc">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Montant (€)</label>
-            <input type="number" step="0.01" class="form-control" id="txAmount" required>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary" id="saveTx">Enregistrer</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 

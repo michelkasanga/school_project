@@ -1,0 +1,14 @@
+{% include "home/includes/base.html" %}
+{% block content %}
+<div class="container col-md-4  mt-4 card">
+    <div class=" card-body">
+        <h2>Modifier le frais : {{ fee.name }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'finance:index_fees' %}" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
