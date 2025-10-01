@@ -1,17 +1,21 @@
-{% include "home/includes/base.html" %}
-<pre class="bg-light text-dark p-2 mb-3">{{ groupe_frais|safe }}</pre>
+{% include "includes/base.html" %}
+
+{% block content %}
+
+{% include "includes/nav_bar_finance.html" %}
+
+  
+
 <section class="container py-4">
+    
     <div class="row justify-content-center">
         {% for frais, mois_dict in groupe_frais.items %}
-            <div class="col-12 mb-3">
-                <h4 class="fw-bold text-primary">{{ frais }}</h4>
-            </div>
             {% for mois, infos in mois_dict.items %}
                 {% for info in infos %}
                     <div class="col-md-8 col-lg-6 mb-4">
                         <div class="card shadow-sm border-0">
-                            <div class="card-header bg-info text-dark">
-                                <h5 class="mb-0">{{ info.student_name }} {{ info.student_surname }} {{ info.student_first_name }}</h5>
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"  >{{ frais|capfirst}}</h5>
                             </div>
                             <div class="card-body bg-light">
                                 <div class="mb-2"><span class="fw-bold text-secondary">Montant Frais :</span> <span class="badge bg-success">{{ info.fees_mount|floatformat:0 }} FC</span></div>
@@ -45,4 +49,6 @@
         {% endfor %}
     </div>
 </section>
+{% endblock  %}
 
+{% include "includes/footer.html" %}

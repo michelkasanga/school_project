@@ -1,3 +1,8 @@
+"""
+Fichier d'administration Django pour la gestion des modèles étudiants.
+Toutes les classes et fonctions sont documentées selon les standards Pylint.
+"""
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
@@ -6,7 +11,10 @@ from .forms import StudentsForm
 
 @admin.register(Students)
 class StudentsAdmin(admin.ModelAdmin):
-    
+    """
+    Classe d'administration pour le modèle Students.
+    Permet la gestion des informations élèves et des informations parent/tuteur.
+    """
     form =  StudentsForm
     list_display = ['name', 
             'surname',

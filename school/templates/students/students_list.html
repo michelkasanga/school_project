@@ -1,0 +1,135 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .students-filters {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px 10px 10px 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .students-filters label {
+    font-weight: 500;
+    color: #495057;
+  }
+  .students-filters select {
+    min-width: 120px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.2s;
+  }
+  .students-filters select:focus {
+    border-color: #86b7fe;
+    outline: none;
+  }
+  .students-table th, .students-table td {
+    vertical-align: middle;
+    text-align: center;
+  }
+  .students-table tbody tr:hover {
+    background: #e9f5ff;
+    transition: background 0.2s;
+  }
+  .students-table {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  @media (max-width: 768px) {
+    .students-filters .col-md-3 { flex: 0 0 100%; max-width: 100%; margin-bottom: 10px; }
+    .students-table th, .students-table td { font-size: 13px; }
+  }
+</style>
+<div class="container mt-4">
+    <h2 class="mb-4">Liste des élèves</h2>
+    <form method="get" class="row g-3 students-filters mb-4" id="filter-form">
+        <div class="col-md-3">
+            <label for="section" class="form-label">Section</label>
+            <select name="section" id="section" class="form-select">
+                <option value="">Toutes</option>
+                {% for sec in sections %}
+                    <option value="{{ sec.id }}" {% if request.GET.section == sec.id|stringformat:'s' %}selected{% endif %}>{{ sec.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="classe" class="form-label">Classe</label>
+            <select name="classe" id="classe" class="form-select">
+                <option value="">Toutes</option>
+                {% for cl in classes %}
+                    <option value="{{ cl.id }}" {% if request.GET.classe == cl.id|stringformat:'s' %}selected{% endif %}>{{ cl.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="option" class="form-label">Option (facultatif)</label>
+            <select name="option" id="option" class="form-select">
+                <option value="">Toutes</option>
+                {% for opt in options %}
+                    <option value="{{ opt.id }}" {% if request.GET.option == opt.id|stringformat:'s' %}selected{% endif %}>{{ opt.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!-- Filtrage automatique -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('filter-form');
+                const selects = form.querySelectorAll('select');
+                selects.forEach(function(select) {
+                    select.addEventListener('change', function() {
+                        form.submit();
+                    });
+                });
+            });
+        </script>
+    </form>
+    <div class="table-responsive">
+      <table class="table table-striped students-table">
+          <thead class="table-light">
+              <tr>
+                  <th>Nom</th>
+                  <th>Post Nom</th>
+                  <th>Prénom</th>
+                  <th>Matricule</th>
+                  <th>Section</th>
+                  <th>Classe</th>
+                  <th>Option</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for eleve in page_obj %}
+              <tr>
+                  <td>{{ eleve.name }}</td>
+                  <td>{{ eleve.surname }}</td>
+                  <td>{{ eleve.first_name }}</td>
+                  <td>{{ eleve.matricule }}</td>
+                  <td>{{ eleve.section }}</td>
+                  <td>{{ eleve.classe }}</td>
+                  <td>{% if eleve.option %}{{ eleve.option }}{% else %}-{% endif %}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7">Aucun élève trouvé.</td></tr>
+              {% endfor %}
+          </tbody>
+      </table>
+    </div>
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?{% if request.GET.section %}section={{ request.GET.section }}&{% endif %}{% if request.GET.classe %}classe={{ request.GET.classe }}&{% endif %}{% if request.GET.option %}option={{ request.GET.option }}&{% endif %}page={{ page_obj.previous_page_number }}">Précédent</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Précédent</span></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?{% if request.GET.section %}section={{ request.GET.section }}&{% endif %}{% if request.GET.classe %}classe={{ request.GET.classe }}&{% endif %}{% if request.GET.option %}option={{ request.GET.option }}&{% endif %}page={{ page_obj.next_page_number }}">Suivant</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Suivant</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

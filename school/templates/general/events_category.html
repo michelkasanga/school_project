@@ -1,8 +1,8 @@
-{% include "home/includes/base.html" %}
+{% include "includes/base.html" %}
 
 <body class="events-page">
    <!-- NAVBAR HERE -->
-   {% include "home/includes/nav_bar.html" %}
+   {% include "includes/nav_bar.html" %}
 
 
 
@@ -18,7 +18,7 @@
         <p>Decouvrez les evenemens marquant de notre institution</p>
         <nav class="breadcrumbs">
           <ol>
-            <li><a href=" {% url "general:index" %} ">Home</a></li>
+            <li><a href=" {% url "general:index" %} ">Acceuil</a></li>
             <li class="current">Events</li>
           </ol>
         </nav>
@@ -57,8 +57,8 @@
                         {% endif %}
 
                     </div>
-                    <p>{{event.description|truncatewords:25}}</p>
-                    <a href="#" class="btn-event">Detail <i class="bi bi-arrow-right"></i></a>
+                    <p>{{event.description|truncatewords:25|safe}}</p>
+                    <a href=" {% url "general:show_event" event.id %} " class="btn-event">Detail <i class="bi bi-arrow-right"></i></a>
                   </div>
                 </div><!-- End Event Item -->
               {% endfor %}
@@ -83,52 +83,22 @@
 
           <div class="col-lg-4">
             <div class="sidebar">
-              <div class="sidebar-item" data-aos="fade-up" data-aos-delay="100">
-                <h3 class="sidebar-title">Upcoming Events</h3>
-                <div class="event-calendar">
-                  <div class="calendar-header">
-                    <h4>June 2023</h4>
-                  </div>
-                  <div class="calendar-body">
-                    <div class="weekdays">
-                      <div>Su</div>
-                      <div>Mo</div>
-                      <div>Tu</div>
-                      <div>We</div>
-                      <div>Th</div>
-                      <div>Fr</div>
-                      <div>Sa</div>
-                    </div>
-                    <div class="days">
-                     {{calendar.days}}
-                    </div>
+
+             
+
+              {% if categories %}
+                <div class="sidebar-item" data-aos="fade-up" data-aos-delay="300">
+                  <h3 class="sidebar-title">Event Categories</h3>
+                  <div class="categories">
+                    <ul>
+                        <li><a href="{% url "general:event"%}" > Tout Affichez <span>({{all}})</span></a></li>
+                        {% for cat in categories  %}
+                        <li><a href="{% url "general:event_category" cat.key %}" > {{cat.label}} <span>({{cat.nombre}})</span></a></li>
+                        {% endfor %}
+                    </ul>
                   </div>
                 </div>
-              </div>
-
-              <div class="sidebar-item featured-event" data-aos="fade-up" data-aos-delay="200">
-                <h3 class="sidebar-title">Featured Event</h3>
-                <div class="featured-event-content">
-                  <img src="assets/img/education/events-5.webp" alt="Featured Event" class="img-fluid">
-                  <h4>Annual Arts Festival</h4>
-                  <p><i class="bi bi-calendar-event"></i> July 15-17, 2023</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus consectetur adipiscing elit.</p>
-                  <a href="#" class="btn-register">Register Now</a>
-                </div>
-              </div>
-
-              <div class="sidebar-item" data-aos="fade-up" data-aos-delay="300">
-                <h3 class="sidebar-title">Event Categories</h3>
-                <div class="categories">
-                  <ul>
-                    <li><a href="#">Academic <span>(12)</span></a></li>
-                    <li><a href="#">Sports <span>(8)</span></a></li>
-                    <li><a href="#">Cultural <span>(6)</span></a></li>
-                    <li><a href="#">Workshops <span>(4)</span></a></li>
-                    <li><a href="#">Conferences <span>(3)</span></a></li>
-                  </ul>
-                </div>
-              </div>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -140,6 +110,6 @@
   </main>
 
     <!-- ======= Footer ======= -->
-{% include "home/includes/foot.html" %}
+{% include "includes/foot.html" %}
 
-{% include "home/includes/footer.html" %}
+{% include "includes/footer.html" %}

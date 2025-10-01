@@ -1,6 +1,7 @@
-{% include "home/includes/base.html" %}
+{% include "includes/base.html" %}
 
 {% block content %}
+{% include "includes/nav_bar_finance.html" %}
 
 <div class="container-fluid">
   <div class="row">
@@ -31,7 +32,7 @@
               <tbody>
                     {% for fee in fees %}
                         <tr>
-                            <td>{{ fee.name }}</td>
+                            <td>{{ fee.name|capfirst }}</td>
                             <td>{{ fee.amount|floatformat:2 }} FC</td>
                             <td>{% if fee.classe %} {{ fee.classe.all|join:", " }} {% else %} - {% endif %}</td>
                             <td>{{ fee.section.name }}</td>
@@ -88,3 +89,5 @@
 </div>
 
 {% endblock %}
+
+{% include "includes/footer.html" %}

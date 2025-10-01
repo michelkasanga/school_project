@@ -1,3 +1,8 @@
+"""
+Vues pour la gestion des comptes utilisateurs (connexion, profils, déconnexion, etc.).
+Chaque fonction est documentée selon les standards Pylint.
+"""
+
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.models import User
@@ -14,10 +19,18 @@ from datetime import date
 from finance.models import Box, Fees
 from staff.models import Staff
 from general.models import * 
+from collections import defaultdict
 
 
 
 def login_view(request):
+    """
+    Vue de connexion utilisateur. Authentifie l'utilisateur et redirige selon son profil (staff ou élève).
+    Args:
+        request (HttpRequest): La requête HTTP reçue.
+    Returns:
+        HttpResponse: Page de connexion ou redirection vers le profil.
+    """
     if request.method == 'POST':
        form = CustomLoginForm(request.POST)
        if form.is_valid():
@@ -45,10 +58,17 @@ def login_view(request):
     else:
         
         form = CustomLoginForm()
-    return render(request, "home/accounts/login.html", {'form':form})
+    return render(request, "accounts/login.html", {'form':form})
 
 def profile(request, user_id):
-    
+    """
+    Vue pour afficher le profil d'un utilisateur staff.
+    Args:
+        request (HttpRequest): La requête HTTP reçue.
+        user_id (int): L'identifiant de l'utilisateur.
+    Returns:
+        HttpResponse: Page de profil staff.
+    """
     user = get_object_or_404(User, id=user_id)
     try:
         staff = Staff.objects.get(user=user)
@@ -77,10 +97,18 @@ def profile(request, user_id):
         'caisse':caisse, 
         'cours':cours
     }
-    return render(request, "home/profiles/profile.html", context)
+    return render(request, "profiles/profile.html", context)
 
 @login_required
 def edit_profile(request, user_id):
+    """
+    Vue pour modifier le profil d'un utilisateur staff.
+    Args:
+        request (HttpRequest): La requête HTTP reçue.
+        user_id (int): L'identifiant de l'utilisateur.
+    Returns:
+        HttpResponse: Page d'édition du profil ou redirection après modification.
+    """
     profile = Profiles.objects.get(user_id=user_id)
     if request.method == 'POST':
         form = ProfilesForm(request.POST, request.FILES, instance= profile)
@@ -90,15 +118,29 @@ def edit_profile(request, user_id):
             return redirect('accounts:profile', user_id = user_id)
     else:
         form = ProfilesForm(instance=profile)
-    return render(request, 'home/profiles/edit.html', {'form':form})
+    return render(request, 'profiles/edit.html', {'form':form})
 
 def logout_view(request):
+    """
+    Déconnecte l'utilisateur et redirige vers la page d'accueil.
+    Args:
+        request (HttpRequest): La requête HTTP reçue.
+    Returns:
+        HttpResponse: Redirection vers la page d'accueil.
+    """
     logout(request)
     return redirect('general:index')
 
-@login_required
+# @login_required
 def profile_students(request, user_id):
-    
+    """
+    Vue pour afficher le profil d'un élève et son historique de paiements.
+    Args:
+        request (HttpRequest): La requête HTTP reçue.
+        user_id (int): L'identifiant de l'utilisateur élève.
+    Returns:
+        HttpResponse: Page de profil élève avec paiements.
+    """
     user = get_object_or_404(User, id=user_id)
     try:
         students = Students.objects.get(user=user)
@@ -112,42 +154,65 @@ def profile_students(request, user_id):
  
     today = date.today()
     
-    eleve = students
-    paiements = Box.objects.filter(student= eleve).select_related("fees")
     
-    details = []
-    total = 0
-    attendu = 0
-    mois = None
-    type_frais = None
-    
-    for p in paiements:
-        details.append({
-            "date":p.paid_date.strftime("%d %B %Y"),
-            "mois":p.month,
-            "montant":p.amount_pay,
+    paiements = Box.objects.filter(student__id=students.id)# Récupérer tous les paiements de l'élève
+    # Regrouper par frais et mois
+    groupe_frais = defaultdict(lambda: defaultdict(list))
+    # Regroupement unique par frais/mois
+    unique_frais_mois = {}
+    for paiement in paiements:
+        mois_val = paiement.month
+        fees_name = paiement.fees.name
+        fee_id = paiement.fees.id
+        key = f"{fees_name}_{mois_val}"
+        if key not in unique_frais_mois:
+            unique_frais_mois[key] = {
+                "student_id": paiement.student.id,
+                "student_name": paiement.student.name,
+                "student_surname": paiement.student.surname,
+                "student_first_name": paiement.student.first_name,
+                "fees_name": fees_name,
+                "months": mois_val,
+                "fees_mount": float(paiement.fees.amount),
+                "details_paiement": [],
+                "fee_id": fee_id,
+            }
+        unique_frais_mois[key]["details_paiement"].append({
+            'date': paiement.paid_date.strftime('%d %B %Y'),
+            'montant': float(paiement.amount_pay),
+            'payment_id': paiement.id
         })
-        
-        total += p.amount_pay
-        attendu = p.fees.amount
-        mois = p.month
-        type_frais = p.fees.name
-        
-    reste = attendu - total
-    statut = f"En ordre avec le mois de {mois}" if reste == 0 else f"Une dette de {reste}"
+    # Calcul total et dette pour chaque frais/mois
+    groupe_frais = {}
+    for info in unique_frais_mois.values():
+        total = sum([p['montant'] for p in info['details_paiement']])
+        rest = info['fees_mount'] - total
+        info['total'] = total
+        info['dette'] = rest
+        info['statut'] = f"En ordre avec le mois de {info['months']}" if rest == 0 else f"Une dette de {rest}"
+        frais_name = info['fees_name']
+        mois_val = info['months']
+        if frais_name not in groupe_frais:
+            groupe_frais[frais_name] = {}
+        groupe_frais[frais_name][mois_val] = [info]
+    # Conversion en dict pour le template
+    def deep_dict(d):
+        if isinstance(d, dict):
+            return {k: deep_dict(v) for k, v in d.items()}
+        elif isinstance(d, list):
+            return [deep_dict(i) for i in d]
+        else:
+            return d
+    groupe_frais_dict = deep_dict(dict(groupe_frais))
+    
     context = {
-         # ⚠️ adapte si ton Student n’a pas ce champ
-        "type_frais": type_frais,
-        "mois": mois,
-        "paiements": details,
-        "total": total,
-        "attendu": attendu,
-        "statut": statut,
+         "groupe_frais": groupe_frais_dict,
+        'paiement':paiement,
         "contacts": Contact.objects.all()[:1],
         'profile':profile,
         'students':students, 
         'age': today.year - students.date_birthday.year if students.date_birthday  else '-' 
     }
  
-    return render(request, "home/profiles/profile_students.html", context)
-    
+    return render(request, "profiles/profile_students.html", context)
+

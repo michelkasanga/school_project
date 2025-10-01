@@ -35,11 +35,13 @@
               <li>
                 {% if user.is_authenticated and current_student %}
                  <a href="{% url "accounts:profile_students" user.id %}" style="  " class="text-primary">  
+                  
                   {% if user.first_name and  user.last_name %} 
-                  {{user.first_name}} {{user.last_name}} 
+                     {{user.first_name}} {{user.last_name}} 
                   {% else %} 
-                  {{user.username}} 
-                  {% endif %}  
+                     {{user.username}} 
+                  {% endif %} 
+
                 </a>
                 {% else %}
                 <a href="{% url "accounts:profile" user.id %}" style="  " class="text-primary">  

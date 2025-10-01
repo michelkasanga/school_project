@@ -25,7 +25,7 @@ def index(request):
         'principal':Staff.objects.prefetch_related('role').filter(role__name = 'principal').only('id', 'role').first(),
         'titre':'Gethsemane'            
     }
-    return render(request, 'home/index.html', context)
+    return render(request, 'index.html', context)
 
 def about(request):
     context = {
@@ -34,7 +34,7 @@ def about(request):
         'year': int(timezone.now().year) - 2022,
         'staff_count': Staff.objects.count() ,      
     }
-    return render(request, 'home/about.html', context)
+    return render(request, 'general/about.html', context)
 
 def event(request):
     act = Actuality.objects.only('id', 'title', 'place', 'hours', 'facilitator', 'date', 'end', 'image').order_by("-id")
@@ -69,7 +69,7 @@ def event(request):
         'categories':label_category,
          'all': Actuality.objects.count(),
     }
-    return render(request, 'home/events.html', context)
+    return render(request, 'general/events.html', context)
 
 def filter_categories(request, category):
     act = Actuality.objects.filter(category = category)
@@ -105,7 +105,7 @@ def filter_categories(request, category):
         'categories':label_category, 
         'all': Actuality.objects.count()
     }
-    return render(request, 'home/events_category.html', context)
+    return render(request, 'general/events_category.html', context)
     
 
 
@@ -117,7 +117,7 @@ def show_event(request, id):
         'titre':event.title,
         'relate_event':relate_event
     }
-    return render(request, 'home/show/event.html', context)
+    return render(request, 'show/event.html', context)
 
 def program(request):
     icons = ['briefcase','graph-up', 'diagram-3', 'globe', 'cloud', 'cpu', 'tree', 'people']
@@ -125,7 +125,7 @@ def program(request):
         'program' : Program.objects.only('id', 'title', 'credit', 'duration', 'level', 'description', 'image'), 
         'icons' : icons,
     }
-    return render(request, 'home/program.html', context)
+    return render(request, 'general/program.html', context)
 
 def program_view(request, id):
     program= get_object_or_404(Program, pk=id)
@@ -134,7 +134,7 @@ def program_view(request, id):
         'titre':program.title
     }
     
-    return render(request, 'home/show/program.html', context)
+    return render(request, 'show/program.html', context)
 
 def contacts(request):
     context={
@@ -142,5 +142,5 @@ def contacts(request):
     }
     
         
-    return render(request, 'home/contact.html', context)
+    return render(request, 'general/contact.html', context)
     

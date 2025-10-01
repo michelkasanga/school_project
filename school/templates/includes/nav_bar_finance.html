@@ -1,0 +1,44 @@
+ 
+  <nav id="header" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+    
+      {% if not paiement.student %}
+
+        <a href="{% url "finance:index_finance" %}" class="logo d-flex align-items-center">
+          <h1 class="bi bi-currency-exchange" style='color:white;'> </h1>  &nbsp; &nbsp; 
+          <h1 class="sitename" style='color:white;'>Caisse</h1>
+        </a>
+
+      {% else %}
+
+       <a href="{% url "accounts:profile_students" paiement.student.user.id %}" class="logo d-flex align-items-center">
+        <h3 class="sitename" style='color:white;'> {{paiement.student.name}} {{paiement.student.surname}}   &nbsp; &nbsp;  &nbsp; &nbsp; {{paiement.student.matricule}} </h3>
+      </a>
+
+      {% endif %} 
+
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url "general:index" %}" class="">Acceuil</a></li>
+          <li><a href="{% url "finance:index_finance" %}" class="">Caisse</a></li>
+          <li><a href="{% url "finance:index_fees" %}">Frais</a></li>
+          {% if  user.is_authenticated %}
+              <li>
+                <a href="{% url "accounts:profile" user.id %}" style="  " class="title">
+                
+                  {% if user.first_name and  user.last_name %} 
+                     {{user.first_name}} {{user.last_name}} 
+                  {% else %} 
+                     {{user.username}} 
+                  {% endif %} 
+                </a>
+            </li>
+          {% endif %}
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </nav>
+  <div class="d-flex justify-content-between align-items-center mb-5 mt-5"></div>

@@ -56,6 +56,9 @@ class CategorieEvenement(models.TextChoices):
 
 
 class Hero(models.Model):
+    """
+    Modèle représentant la section héro de la page d'accueil.
+    """
     title = models.CharField("titre", max_length= 100)
     message = models.TextField("message", max_length= 500, blank=False)
     video = models.FileField(upload_to="hero/", default="hero/default.mp4")
@@ -69,6 +72,9 @@ class Hero(models.Model):
         
         
 class Contact(models.Model):
+    """
+    Modèle représentant les informations de contact de l'établissement.
+    """
     email = models.EmailField()
     tel = PhoneNumberField("Téléphone", region='CD' ,null= True, blank= True, unique= True)
     address = models.TextField('Adresse', blank=False)
@@ -78,6 +84,9 @@ class Contact(models.Model):
     
 
 class Program(models.Model):
+    """
+    Modèle représentant un programme de formation.
+    """
     title = models.CharField("Titre",max_length=100)
     credit = models.DecimalField("Credit",max_digits=10,null=True, default= 0.0, decimal_places= 2)
     duration = models.CharField("Durée",max_length=60)
@@ -96,10 +105,18 @@ class Program(models.Model):
         verbose_name_plural = 'Programmes'
         
     def __str__(self):
+        """
+        Retourne le titre du programme.
+        Returns:
+            str: Titre du programme.
+        """
         return self.title
 
 
 class Testimonial(models.Model):
+    """
+    Modèle représentant un témoignage d'un élève ou parent.
+    """
     ROLE_CHOISE = (
         ('parent', 'Parent'), 
         ('almni', 'Ancien élève'),
@@ -117,11 +134,38 @@ class Testimonial(models.Model):
         verbose_name = 'Témoignage'
         verbose_name_plural = 'Témoignages'
         
-        
     def __str__(self):
+        """
+        Retourne le nom de l'auteur du témoignage.
+        Returns:
+            str: Nom de l'auteur.
+        """
         return self.fullname
 
+    def formatted_created_at(self):
+        """
+        Retourne la date de création formatée.
+        Returns:
+            str: Date formatée.
+        """
+        if self.created_at:
+            return self.created_at.strftime("%d/%m/%Y %H:%M")
+        return ""
+
+    def formatted_updated_at(self):
+        """
+        Retourne la date de mise à jour formatée.
+        Returns:
+            str: Date formatée.
+        """
+        if self.updated_at:
+            return self.updated_at.strftime("%d/%m/%Y %H:%M")
+        return ""
+
 class Actuality(models.Model):
+    """
+    Modèle représentant une actualité publiée par l'établissement.
+    """
     title = models.CharField("Titre",max_length=100)
     facilitator = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)
     hours = models.TimeField(null=True)
@@ -140,9 +184,37 @@ class Actuality(models.Model):
         
         
     def __str__(self):
+        """
+        Retourne le titre de l'actualité.
+        Returns:
+            str: Titre de l'actualité.
+        """
         return self.title
 
+    def formatted_created_at(self):
+        """
+        Retourne la date de création formatée.
+        Returns:
+            str: Date formatée.
+        """
+        if self.created_at:
+            return self.created_at.strftime("%d/%m/%Y %H:%M")
+        return ""
+
+    def formatted_updated_at(self):
+        """
+        Retourne la date de mise à jour formatée.
+        Returns:
+            str: Date formatée.
+        """
+        if self.updated_at:
+            return self.updated_at.strftime("%d/%m/%Y %H:%M")
+        return ""
+
 class About(models.Model):
+    """
+    Modèle représentant la section "À propos" de l'établissement.
+    """
     description = HTMLField("Description", null=True)
     mission = HTMLField("Notre mission", null=True)
     values = HTMLField("Nos valeur", null=True)
@@ -157,5 +229,30 @@ class About(models.Model):
         
         
     def __str__(self):
-        return self.description     
-    
+        """
+        Retourne le titre de la section.
+        Returns:
+            str: Titre de la section.
+        """
+        return self.description
+
+    def formatted_created_at(self):
+        """
+        Retourne la date de création formatée.
+        Returns:
+            str: Date formatée.
+        """
+        if self.created_at:
+            return self.created_at.strftime("%d/%m/%Y %H:%M")
+        return ""
+
+    def formatted_updated_at(self):
+        """
+        Retourne la date de mise à jour formatée.
+        Returns:
+            str: Date formatée.
+        """
+        if self.updated_at:
+            return self.updated_at.strftime("%d/%m/%Y %H:%M")
+        return ""
+

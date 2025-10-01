@@ -1,4 +1,4 @@
-{% include "home/includes/base.html" %}
+{% include "includes/base.html" %}
 
 
 <body class="profile">
@@ -12,6 +12,7 @@
         <i class="bi bi-arrow-left text-warning fs-5"></i>
      
       </a>
+      {% if user.is_authenticated  %}
       {% if user.is_authenticated and user.id == profile.id %}
             <nav id="navmenu" class="navmenu">
               <ul>
@@ -19,6 +20,7 @@
               </ul>
               <i class="mobile-nav-toggle d-xl-none bi bi-list auto"></i>
             </nav>
+      {% endif %}
       {% endif %}
     </div>
   </header>
@@ -109,39 +111,6 @@
                         </div>
                       </div>
 
-                      {% if paiements %}
-                      <div class="col-md-6 col-lg-4">
-                        <p> <h4 class="mb-2 text-muted">___Finance___  </h4></p>
-                        <div class="faculty-card ">
-                              <div class="faculty-info ">
-
-                                <div class="faculty-specialties mb-2 " style=" " >
-                                 {% if type_frais %} <h6 class=" bi bi-money" >{{ type_frais}}<strong> {{ attendu }}  </strong></h6>{% endif %}
-                                 {% if mois  %} <h6 class=" bi bi-calendar" > {{ mois }} </h6>{% endif %}
-                                </div>  
-                                  <p> <h5 class="mb-2 text-muted">_______________________________</h5></p>
-                                <div class="faculty-specialties mb-2 " style=" " >
-                                  <p> <h5 class="mb-2 text-muted">Paiement</h5></p>
-                                  {% if paiements %}
-                                   {% for p in paiements %}
-                                      {% if p.date %} <h6 class=" bi bi-money" >{{ p.date}} </h6>{% endif %}
-                                      {% if p.mois  %} <h6 class=" bi bi-calendar" > {{ p.mois }} </h6>{% endif %}
-                                      {% if p.montant  %} <h6 class=" bi bi-calendar" > {{ p.montant }} </h6>{% endif %}
-                                   {% endfor %}
-                                  {% endif %}
-                                </div>
-                                    <p> <h5 class="mb-2 text-muted">_______________________________</h5></p>
-                                 <div class="faculty-specialties mb-2 " style=" " >
-                                   <p> <h5 class="mb-2 text-muted">Resultats</h5></p>
-                                 {% if total %} <h6 class=" bi bi-money" > <span class="text-muted"> Total payer: </span> <strong> {{ total }}  </strong></h6>{% endif %}
-                                 {% if statut  %} <h6 class=" bi bi-calendar" >  <span class="text-muted"> Statut: </span>  <strong> {{ statut }}  </strong> </h6>{% endif %}
-                                </div>
-
-                              </div>
-                        </div>
-                      </div>
-                      {% endif %}
-
                   </div>
                 </div>
 
@@ -150,8 +119,49 @@
        
   </section>
 
-  
-{% include "home/includes/foot.html" %}
+  <section class="container py-4">
+      <div class="row justify-content-center">
+        {% if paiement %}
+        <p> <h4 class="mb-2 text-muted" >Paiements  </h4></p>
+          {% for frais, mois_dict in groupe_frais.items %}
+              {% for mois, infos in mois_dict.items %}
+                  {% for info in infos %}
+                      <div class="col-md-8 col-lg-6 mb-4">
+                          <div class="card shadow-sm border-0">
+                              <div class="card-header bg-info text-white">
+                                  <h5 class="mb-0"  >{{ frais|capfirst}}</h5>
+                              </div>
+                              <div class="card-body bg-light">
+                                  <div class="mb-2"><span class="fw-bold text-secondary">Montant Frais :</span> <span class="badge bg-success">{{ info.fees_mount|floatformat:0 }} FC</span></div>
+                                  <div class="mb-2"><span class="fw-bold text-secondary">Mois :</span> <span class="badge bg-primary text-white">{% if info.months == 1 %}Septembre{% elif info.months == 2 %}Octobre{% elif info.months == 3 %}Novembre{% elif info.months == 4 %}Décembre{% elif info.months == 5 %}Janvier{% elif info.months == 6 %}Février{% elif info.months == 7 %}Mars{% elif info.months == 8 %}Avril{% elif info.months == 9 %}Mai{% elif info.months == 10 %}Juin{% else %}{{ info.months }}{% endif %}</span></div>
+                                  <div class="mb-2"><span class="fw-bold text-secondary">Détails paiement :</span></div>
+                                  <ul class="list-group list-group-flush mb-2">
+                                      {% for paiement in info.details_paiement %}
+                                          <li class="list-group-item">
+                                              -le <span class="text-primary">{{ paiement.date }}</span> paye <span class="fw-bold">{{ paiement.montant|floatformat:0 }} FC</span>
+                                             
+                                          </li>
+                                      {% endfor %}
+                                
+                                  <div class="mb-2"><span class="fw-bold text-secondary">Statut :</span></div>
+                                  <ul class="list-group list-group-flush">
+                                      <li class="list-group-item">Dette : <span class="fw-bold text-danger">{{ info.dette|floatformat:0 }}</span></li>
+                                      <li class="list-group-item">Total payé : <span class="fw-bold text-success">{{ info.total|floatformat:0 }}</span></li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                  {% endfor %}
+              {% endfor %}
+          {% endfor %}
+        {% else %}
+         <div><i colspan="10" class="text-center">Aucune donnée trouvée.</i></div>
+        {% endif %}
+      </div>
+  </section>
 
-{% include "home/includes/footer.html" %}
+  
+{% include "includes/foot.html" %}
+
+{% include "includes/footer.html" %}
 

@@ -1,8 +1,8 @@
-{% include "home/includes/base.html" %}
+{% include "includes/base.html" %}
 
 <body class="events-page">
    <!-- NAVBAR HERE -->
-   {% include "home/includes/nav_bar.html" %}
+   {% include "includes/nav_bar.html" %}
 
 
 
@@ -93,7 +93,7 @@
                     <ul>
                         <li><a href="{% url "general:event"%}" > Tout Affichez <span>({{all}})</span></a></li>
                         {% for cat in categories  %}
-                        <li><a href="{% url "general:event_category" cat.key %}" > {{cat.label}} <span>({{cat.nombre}})</span></a></li>
+                        <li><a href="{% url "general:event_category" cat.key %}"> {{cat.label}} <span>({{cat.nombre}})</span></a></li>
                         {% endfor %}
                     </ul>
                   </div>
@@ -110,6 +110,6 @@
   </main>
 
     <!-- ======= Footer ======= -->
-{% include "home/includes/foot.html" %}
+{% include "includes/foot.html" %}
 
-{% include "home/includes/footer.html" %}
+{% include "includes/footer.html" %}

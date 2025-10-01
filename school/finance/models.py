@@ -1,3 +1,8 @@
+"""
+Modèles pour la gestion financière (frais, paiements, caisse, etc.).
+Chaque classe et méthode est documentée selon les standards Pylint.
+"""
+
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.db import models
@@ -8,6 +13,9 @@ from staff.models import Staff
 
 
 class MonthChoice(models.IntegerChoices):
+    """
+    Enumération des mois utilisés pour les paiements.
+    """
     SEPTEMBRE = 1, 'Septembre'
     OCTOBRE = 2, 'Octobre'   
     NOVEMBRE = 3, 'Novembre'
@@ -21,6 +29,9 @@ class MonthChoice(models.IntegerChoices):
 
 
 class Fees(models.Model):
+    """
+    Modèle représentant un type de frais scolaire (montant, classe, section, options).
+    """
     name = models.CharField("Frais",max_length=100, unique=False, null=False, blank=False)
     amount = models.DecimalField("Montant",max_digits=10, decimal_places=2, null=False, blank=False)
     classe = models.ManyToManyField(Classes)
@@ -36,17 +47,35 @@ class Fees(models.Model):
         ordering = ['updated_at']  
     
     def __str__(self):
+        """
+        Retourne le nom et le montant du frais.
+        Returns:
+            str: Description du frais.
+        """
         return f"{self.name} {self.amount}"
     
     def formatted_created_at(self):
+        """
+        Retourne la date de création formatée.
+        Returns:
+            str: Date formatée.
+        """
         return self.created_at.strftime("%Y-%m-%d %H:%M:%S")
     
     def formatted_updated_at(self):
+        """
+        Retourne la date de mise à jour formatée.
+        Returns:
+            str: Date formatée.
+        """
         return self.updated_at.strftime("%Y-%m-%d %H:%M:%S")
     
     
     #__________________________________________
 class Box(models.Model):
+    """
+    Modèle représentant un paiement effectué par un élève pour un frais donné et un mois donné.
+    """
     TYPE_PAIEMENT_CHOICES = [
         ('espece', 'Espèces'),
         ('cheque', 'Chèque'),
@@ -69,9 +98,20 @@ class Box(models.Model):
         verbose_name_plural="caisse"
         
     def get_month_display(self):
+        """
+        Retourne le nom du mois correspondant à la valeur stockée.
+        Returns:
+            str: Nom du mois ou '-'.
+
+        """
         return MonthChoice(self.month).label if self.month in MonthChoice.values else '-'
 
     def __str__(self):
+        """
+        Retourne une description textuelle du paiement.
+        Returns:
+            str: Description du paiement.
+        """
         return f"{self.student} - {self.fees.name} - {self.get_month_display()}"
     
         
@@ -116,8 +156,18 @@ class Box(models.Model):
    
         
 class Total(models.Model):
+    """
+    Modèle représentant le total des paiements pour un frais et un mois donnés.
+    """
     @classmethod
     def update_totals_for_fees_and_month(cls, fees, month):
+        """
+        Met à jour les totaux pour un frais et un mois donnés.
+        Args:
+            cls: La classe en cours (Total).
+            fees (Fees): L'objet frais associé.
+            month (int): Le mois pour lequel mettre à jour les totaux.
+        """
         from .models import Box  # Import différé pour éviter les problèmes de dépendance
         from django.db.models import Sum
         from decimal import Decimal
@@ -160,9 +210,19 @@ class Total(models.Model):
         verbose_name = "Total"
         
     def get_month_display(self):
+        """
+        Retourne le nom du mois correspondant à la valeur stockée.
+        Returns:
+            str: Nom du mois ou '-'.
+        """
         return MonthChoice(self.month).label if self.month in MonthChoice.values else '-'
 
     def __str__(self):
+        """
+        Retourne une description textuelle du total.
+        Returns:
+            str: Description du total.
+        """
         return f"{self.fees.name} - {self.get_month_display()}"
 # Signaux pour mettre à jour Total à chaque ajout, modification ou suppression de Box
 
@@ -173,10 +233,24 @@ from django.dispatch import receiver
 @receiver(post_save, sender=Box)
 @receiver(post_delete, sender=Box)
 def update_total_on_box_change(sender, instance, **kwargs):
+    """
+    Met à jour le total associé à un paiement lorsque celui-ci est ajouté, modifié ou supprimé.
+    Args:
+        sender (Model): Le modèle qui envoie le signal.
+        instance (Box): L'instance de Box qui a été modifiée.
+        **kwargs: Arguments supplémentaires.
+    """
     Total.update_totals_for_fees_and_month(instance.fees, instance.month)
 
     @classmethod
     def update_totals_for_fees_and_month(cls, fees, month):
+        """
+        Met à jour les totaux pour un frais et un mois donnés.
+        Args:
+            cls: La classe en cours (Total).
+            fees (Fees): L'objet frais associé.
+            month (int): Le mois pour lequel mettre à jour les totaux.
+        """
         from .models import Box  # Import différé pour éviter les problèmes de dépendance
         from django.db.models import Sum
         from decimal import Decimal
